@@ -55,11 +55,6 @@ public class InGame implements Screen
         inGameMusic = Gdx.audio.newMusic(Gdx.files.internal("inGame.mp3"));
         projectileImg = new Texture("projectile.png");
 
-
-        inGameMusic.setLooping(true);
-        inGameMusic.play();
-        inGameMusic.setVolume(0.2f);
-
         camera = new OrthographicCamera();
         camera.setToOrtho(false,800,950);
 
@@ -85,6 +80,9 @@ public class InGame implements Screen
     @Override
     public void show()
     {
+        inGameMusic.setVolume(0.2f);
+        inGameMusic.play();
+        inGameMusic.setLooping(true);
 
     }
 

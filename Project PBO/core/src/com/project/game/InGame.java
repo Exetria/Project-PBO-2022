@@ -29,23 +29,21 @@ public class InGame implements Screen
     Enemy boss;
     Array<Enemy> asteroids;
     Rectangle laser;
+    Rectangle a;                //a ini rectangle sementara buat ngisi array musuh
     Array<Rectangle> lasers;
     Array<Rectangle> enemies;
+    Array<Rectangle> enemiesTrans;
     Array<Rectangle> projectiles;
 
-    long lastAttackTime;
-    long lastProjectileTime;
-    int enemyDestroyed;
-    int touchSide;
+    long lastAttackTime, lastProjectileTime, lastAsteroidTime, lastPlayerCrashTime;
     private int score;
-    long lastAsteroidTime;
-    long lastPlayerCrashTime;
+    int enemyDestroyed, touchSide, i;
+    boolean bossState;          //maksudnya state sekarang lagi boss fight atau tidak
 
     //INI CONSTRUCTOR DARI GAME SCREEN, ISINYA SAMA KAYAK create()
     public InGame(Shooter game, AssetManager assetManager)
     {
         this.game = game;
-
 
         playerImg = new Texture("player.png");
         enemyImg = new Texture("enemy.png");
@@ -64,13 +62,13 @@ public class InGame implements Screen
         player.width = 64;
         player.height = 64;
 
-        spawnBoss();
+        //spawnBoss();
 
         lasers = new Array<Rectangle>();
-//         spawnLaserPulse();
+        //spawnLaserPulse();
 
         projectiles = new Array<Rectangle>();
-        spawnProjectile();
+        //spawnProjectile();
 
         asteroids = new Array<Enemy>();
         spawnAsteroids();
@@ -83,7 +81,6 @@ public class InGame implements Screen
         inGameMusic.setVolume(0.2f);
         inGameMusic.play();
         inGameMusic.setLooping(true);
-
     }
 
     @Override
@@ -97,15 +94,18 @@ public class InGame implements Screen
 
         game.batch.draw(playerImg, player.x, player.y);
 
-        for (Rectangle laser : lasers) {
+        for (Rectangle laser : lasers)
+        {
             game.batch.draw(laserImg, laser.x, laser.y);
         }
 
-        for (Rectangle projectile : projectiles) {
+        for (Rectangle projectile : projectiles)
+        {
             game.batch.draw(projectileImg, projectile.x, projectile.y);
         }
 
-        for (Enemy asteroid : asteroids) {
+        for (Enemy asteroid : asteroids)
+        {
             game.batch.draw(asteroidImg, asteroid.x, asteroid.y);
         }
 
@@ -115,18 +115,49 @@ public class InGame implements Screen
 
         move();
         shoot();
-        bossMove();
+        //bossMove();
 
+        //fungsi buat wave" musuhnya (belum disessuaiin sama file ini)
+        /*if(bossState && enemyDestroyed % 100 == 0)
+        {
+            enemies.clear();
+            a = new Rectangle();
+            a.width = 200;
+            a.height = 200;
+            a.x = 300;
+            a.y = 750;
+            enemies.add(a);
+            bossState = false;
+        }
+        else if(enemyDestroyed % 100 != 0)
+        {
+            if (TimeUtils.nanoTime() - lastAttackTime > 1000000000)
+            {
+                getEnemyBatch(i);
+                i++;
+                if (i > 10)
+                    i = 1;
+            }
+        }*/
+
+
+
+
+        //spawn peluru boss / detik
+        if (TimeUtils.nanoTime() - lastProjectileTime > 1000_000_000){
+            spawnProjectile();
+        }
+
+        //spawn asteroid / detik
         if (TimeUtils.nanoTime() - lastAsteroidTime > 1000_000_000)
             spawnAsteroids();
 
         // if (TimeUtils.nanoTime() - lastAttackTime > 1000000000)
         //     spawnLaserPulse();
 
-        if (TimeUtils.nanoTime() - lastProjectileTime > 1000_000_000){
-            spawnProjectile();
-        }
 
+
+        //peluru player jalan keatas
         Iterator<Rectangle> iterLaser = lasers.iterator();
         while (iterLaser.hasNext()) {
             Rectangle laser = iterLaser.next();
@@ -135,6 +166,7 @@ public class InGame implements Screen
                 iterLaser.remove();
         }
 
+        //peluru boss jalan ke bawah
         Iterator<Rectangle> iterBossProjectile = projectiles.iterator();
         while (iterBossProjectile.hasNext()) {
             Rectangle projectile = iterBossProjectile.next();
@@ -145,6 +177,7 @@ public class InGame implements Screen
             }
         }
 
+        //asteroid jatuh ke bawah
         Iterator<Enemy> iterAsteroid = asteroids.iterator();
         while (iterAsteroid.hasNext()){
             Enemy asteroid = iterAsteroid.next();
@@ -167,6 +200,7 @@ public class InGame implements Screen
 
     }
 
+    //gerakan player pake wasd
     private void move()
     {
         if (player.x <= 0)
@@ -200,15 +234,21 @@ public class InGame implements Screen
     }
 
 
-    private void shoot(){
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            if (TimeUtils.nanoTime() - lastProjectileTime > 1000_000_000) {
+    //nembak laser pas pencet spasi dan setelah lewat jeda
+    private void shoot()
+    {
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE))
+        {
+            if(TimeUtils.nanoTime() - lastProjectileTime > 1000_000_000)
+            {
                 spawnLaserPulse();
             }
         }
     }
 
-    private void spawnBoss(){
+    //fungsi spawn bossnya
+    private void spawnBoss()
+    {
         touchSide = 1;
         boss = new Boss();
         boss.x = 400-100;
@@ -218,7 +258,9 @@ public class InGame implements Screen
         System.out.println("boss spawned");
     }
 
-    private void bossMove() {
+    //gerakan kanan kiri boss
+    private void bossMove()
+    {
         if (boss.x <0){
             boss.x = 1;
             touchSide++;
@@ -235,19 +277,21 @@ public class InGame implements Screen
         }
     }
 
+    //spawn laser pulse dari player
     private void spawnLaserPulse()
     {
         laser = new Rectangle();
         laser.x = player.x + 28;
         laser.y = player.y + 64;
-        //GAMBAR LASERNYA UDAH AKU CUT JADI 8X28 (LASERNYA TOK TANPA PUTIH" BACKGROUND)
         laser.width = 8;
         laser.height = 28;
         lasers.add(laser);
         lastAttackTime = TimeUtils.nanoTime();
     }
 
-    private void spawnAsteroids(){
+    //spawn asteroid random
+    private void spawnAsteroids()
+    {
         Enemy asteroid = new Asteroid();
         asteroid.width = 32;
         asteroid.height = 32;
@@ -257,8 +301,9 @@ public class InGame implements Screen
         lastAsteroidTime = TimeUtils.nanoTime();
     }
 
-    // boss laser
-    private void spawnProjectile(){
+    //spawn laser boss
+    private void spawnProjectile()
+    {
         Rectangle projectile = new Rectangle();
         projectile.width = 64;
         projectile.height = 64;
@@ -266,6 +311,164 @@ public class InGame implements Screen
         projectile.y = boss.y - projectile.height;
         projectiles.add(projectile);
         lastProjectileTime = TimeUtils.nanoTime();
+    }
+
+    //fungsi buat ganti batch/wave musuh
+    //musuh"nya masih diisi manual untuk sekarang
+    private void getEnemyBatch(int i)
+    {
+        if(i == 0)
+        {
+            enemies.clear();
+            a = new Rectangle();
+            a.x = 272;
+            a.y = 750;
+            enemies.add(a);
+            a = new Rectangle();
+            a.x = 464;
+            a.y = 750;
+            enemies.add(a);
+        }
+        else if(i == 1)
+        {
+            enemies.clear();
+            a = new Rectangle();
+            a.x = 272;
+            a.y = 750;
+            enemies.add(a);
+            a = new Rectangle();
+            a.x = 432;
+            a.y = 750;
+            enemies.add(a);
+        }
+        else if(i == 2)
+        {
+            enemies.clear();
+            a = new Rectangle();
+            a.x = 240;
+            a.y = 750;
+            enemies.add(a);
+            a = new Rectangle();
+            a.x = 464;
+            a.y = 750;
+            enemies.add(a);
+        }
+        else if(i == 3)
+        {
+            enemies.clear();
+            a = new Rectangle();
+            a.x = 272;
+            a.y = 750;
+            enemies.add(a);
+            a = new Rectangle();
+            a.x = 464;
+            a.y = 750;
+            enemies.add(a);
+            a = new Rectangle();
+            a.x = 240;
+            a.y = 750;
+            enemies.add(a);
+            a = new Rectangle();
+            a.x = 432;
+            a.y = 750;
+            enemies.add(a);
+        }
+        else if(i == 4)
+        {
+            enemies.clear();
+            a = new Rectangle();
+            a.x = 240;
+            a.y = 750;
+            enemies.add(a);
+            a = new Rectangle();
+            a.x = 432;
+            a.y = 750;
+            enemies.add(a);
+        }
+        else if(i == 5)
+        {
+            enemies.clear();
+            a = new Rectangle();
+            a.x = 300;
+            a.y = 750;
+            enemies.add(a);
+            a = new Rectangle();
+            a.x = 600;
+            a.y = 750;
+            enemies.add(a);
+        }
+        else if(i == 6)
+        {
+            enemies.clear();
+            a = new Rectangle();
+            a.x = 654;
+            a.y = 750;
+            enemies.add(a);
+            a = new Rectangle();
+            a.x = 734;
+            a.y = 750;
+            enemies.add(a);
+        }
+        else if(i == 7)
+        {
+            enemies.clear();
+            a = new Rectangle();
+            a.x = 372;
+            a.y = 750;
+            enemies.add(a);
+            a = new Rectangle();
+            a.x = 100;
+            a.y = 750;
+            enemies.add(a);
+        }
+        else if(i == 8)
+        {
+            enemies.clear();
+            a = new Rectangle();
+            a.x = 97;
+            a.y = 750;
+            enemies.add(a);
+            a = new Rectangle();
+            a.x = 754;
+            a.y = 750;
+            enemies.add(a);
+        }
+        else if(i == 9)
+        {
+            enemies.clear();
+            a = new Rectangle();
+            a.x = 675;
+            a.y = 750;
+            enemies.add(a);
+            a = new Rectangle();
+            a.x = 213;
+            a.y = 750;
+            enemies.add(a);
+        }
+        else if(i == 10)
+        {
+            enemies.clear();
+            a = new Rectangle();
+            a.x = 272;
+            a.y = 750;
+            enemies.add(a);
+            a = new Rectangle();
+            a.x = 464;
+            a.y = 750;
+            enemies.add(a);
+        }
+        else
+        {
+            enemies.clear();
+            a = new Rectangle();
+            a.x = 272;
+            a.y = 750;
+            enemies.add(a);
+            a = new Rectangle();
+            a.x = 464;
+            a.y = 750;
+            enemies.add(a);
+        }
     }
 
     @Override

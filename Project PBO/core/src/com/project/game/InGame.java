@@ -145,14 +145,16 @@ public class InGame implements Screen
                 spawnProjectile();
             }
         }
-        else if(enemies.get(0).getHP() <= 0)
+        else if(bossState && enemies.get(0).getHP() <= 0)
         {
+            score += 10;
             bossState = false;
+            getEnemyBatch(1);
+            i = 2;
         }
         else if(enemyDestroyed % 100 == 0 && enemyDestroyed > 0)
         {
             spawnBoss();
-            i = 1;
             bossState = true;
         }
         else
@@ -176,20 +178,20 @@ public class InGame implements Screen
         //=====================================================================COLLISION DETECTION===============================================================================
         //peluru player jalan keatas
         Iterator<Rectangle> iterLaser = lasers.iterator();
-        while (iterLaser.hasNext()) {
+        while (iterLaser.hasNext())
+        {
             Rectangle laser = iterLaser.next();
             laser.y += 300 * Gdx.graphics.getDeltaTime();
-            // laser go out of bound
-            if (laser.y + 28 > 950) {
+            if (laser.y + 28 > 950)
+            {
                 iterLaser.remove();
             }
 
-            if (laser.overlaps(enemies.get(0)) && enemies.get(0).getHP() > 0)
+            if(bossState && laser.overlaps(enemies.get(0)) && enemies.get(0).getHP() > 0)
             {
                 iterLaser.remove();
                 enemies.get(0).menerimadamage(player.getLaserDmg());
             }
-
         }
 
         //peluru boss jalan ke bawah

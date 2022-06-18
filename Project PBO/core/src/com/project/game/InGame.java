@@ -12,7 +12,9 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.assets.AssetManager;
+import com.sun.java.swing.plaf.windows.WindowsDesktopPaneUI;
 
+import java.sql.Time;
 import java.util.Iterator;
 
 //CLASS INI ISINYA PROSES-PROSES PAS GAMENYA LAGI JALAN/IN GAME (THE LOGIC)
@@ -27,20 +29,19 @@ public class InGame implements Screen
 
     Player player;
     Enemy boss;
-    Array<Enemy> asteroids;
     Rectangle laser;
-    Rectangle a;                //a ini rectangle sementara buat ngisi array musuh
+    Enemy a;                                                    //a ini rectangle sementara buat ngisi array musuh
     Array<Rectangle> lasers;
-    Array<Rectangle> enemies;
-    Array<Rectangle> enemiesTrans;
     Array<Rectangle> projectiles;
+    Array<Enemy> asteroids;
+    Array<Enemy> enemies;
+    Array<Rectangle> enemiesTrans;
 
-    long lastAttackTime, lastProjectileTime, lastAsteroidTime, lastPlayerCrashTime;
+    long lastAttackTime, lastProjectileTime, lastAsteroidTime, lastSpawnTime;
     private int score;
     int enemyDestroyed, touchSide, i;
-    boolean bossState;          //maksudnya state sekarang lagi boss fight atau tidak
+    boolean bossState;                                          //maksudnya state sekarang lagi boss fight atau tidak
 
-    //INI CONSTRUCTOR DARI GAME SCREEN, ISINYA SAMA KAYAK create()
     public InGame(Shooter game, AssetManager assetManager)
     {
         this.game = game;
@@ -63,9 +64,8 @@ public class InGame implements Screen
         player.height = 64;
 
         //spawnBoss();
-
         lasers = new Array<Rectangle>();
-        //spawnLaserPulse();
+        spawnLaserPulse();
 
         projectiles = new Array<Rectangle>();
         //spawnProjectile();
@@ -73,8 +73,16 @@ public class InGame implements Screen
         asteroids = new Array<Enemy>();
         spawnAsteroids();
 
+        enemies = new Array<Enemy>();
+        getEnemyBatch(1);
+
+        bossState = false;
+        i = 2;                          //i = 2 karena batch ke-1 udah masuk jadi nanti mulai dari 2
+
+        enemyDestroyed = 0;
     }
 
+    //fungsi show bakal insert lagu pas awal mulai
     @Override
     public void show()
     {
@@ -90,73 +98,80 @@ public class InGame implements Screen
 
         camera.update();
 
+        //==================================================================GAMBAR OBJECT-OBJECT=================================================================================
+
         game.batch.begin();
-
         game.batch.draw(playerImg, player.x, player.y);
-
         for (Rectangle laser : lasers)
         {
             game.batch.draw(laserImg, laser.x, laser.y);
         }
-
         for (Rectangle projectile : projectiles)
         {
             game.batch.draw(projectileImg, projectile.x, projectile.y);
         }
-
         for (Enemy asteroid : asteroids)
         {
             game.batch.draw(asteroidImg, asteroid.x, asteroid.y);
         }
-
-        game.batch.draw(bossImg,boss.x,boss.y);
-
+        if(!bossState)
+        {
+            for (Rectangle enemy : enemies)
+            {
+                game.batch.draw(enemyImg, enemy.x, enemy.y);
+            }
+        }
+        else
+        {
+            for (Rectangle enemy : enemies)
+            {
+                game.batch.draw(bossImg, enemy.x, enemy.y);
+            }
+        }
         game.batch.end();
 
-        move();
-        shoot();
-        //bossMove();
+        //==================================================================SPAWN OBJECT-OBJECT==================================================================================
 
-        //fungsi buat wave" musuhnya (belum disessuaiin sama file ini)
-        /*if(bossState && enemyDestroyed % 100 == 0)
+        move();
+
+        //kalo bossnya lagi ada, nanti pake fungsi paling atas
+        //yg kedua dirun kalo score 100 (transisi ke boss state)
+        //yg ketiga dirun kalo keadaan biasa
+        if(bossState)
         {
-            enemies.clear();
-            a = new Rectangle();
-            a.width = 200;
-            a.height = 200;
-            a.x = 300;
-            a.y = 750;
-            enemies.add(a);
-            bossState = false;
+            bossMove();
+            //spawn peluru boss / detik
+            if (TimeUtils.nanoTime() - lastProjectileTime > 1000_000_000)
+            {
+                spawnProjectile();
+            }
         }
-        else if(enemyDestroyed % 100 != 0)
+        else if(enemyDestroyed % 100 == 0 && enemyDestroyed > 0)
         {
-            if (TimeUtils.nanoTime() - lastAttackTime > 1000000000)
+            spawnBoss();
+            bossState = true;
+        }
+        else
+        {
+            if (TimeUtils.nanoTime() - lastSpawnTime > TimeUtils.millisToNanos(2000))
             {
                 getEnemyBatch(i);
                 i++;
                 if (i > 10)
                     i = 1;
             }
-        }*/
-
-
-
-
-        //spawn peluru boss / detik
-        if (TimeUtils.nanoTime() - lastProjectileTime > 1000_000_000){
-            spawnProjectile();
         }
 
         //spawn asteroid / detik
         if (TimeUtils.nanoTime() - lastAsteroidTime > 1000_000_000)
             spawnAsteroids();
 
-        // if (TimeUtils.nanoTime() - lastAttackTime > 1000000000)
-        //     spawnLaserPulse();
+        if (TimeUtils.nanoTime() - lastAttackTime > 1000_000_000)
+            spawnLaserPulse();
 
 
 
+        //=====================================================================COLLISION DETECTION===============================================================================
         //peluru player jalan keatas
         Iterator<Rectangle> iterLaser = lasers.iterator();
         while (iterLaser.hasNext()) {
@@ -168,10 +183,12 @@ public class InGame implements Screen
 
         //peluru boss jalan ke bawah
         Iterator<Rectangle> iterBossProjectile = projectiles.iterator();
-        while (iterBossProjectile.hasNext()) {
+        while (iterBossProjectile.hasNext())
+        {
             Rectangle projectile = iterBossProjectile.next();
             projectile.y -= 300 * Gdx.graphics.getDeltaTime();
-            if (projectile.y < 0 || projectile.overlaps(player)){
+            if (projectile.y < 0 || projectile.overlaps(player))
+            {
                 iterBossProjectile.remove();
 //                System.out.println("boss projectile overlaps with player");
             }
@@ -179,10 +196,12 @@ public class InGame implements Screen
 
         //asteroid jatuh ke bawah
         Iterator<Enemy> iterAsteroid = asteroids.iterator();
-        while (iterAsteroid.hasNext()){
+        while (iterAsteroid.hasNext())
+        {
             Enemy asteroid = iterAsteroid.next();
             asteroid.y -= 300 * Gdx.graphics.getDeltaTime();
-            if (asteroid.y < 0 || asteroid.overlaps(player)){
+            if (asteroid.y < 0 || asteroid.overlaps(player))
+            {
                 iterAsteroid.remove();
                 player.menerimadamage(asteroid.getDamage());
 //                System.out.println("asteroid overlaps with player");
@@ -191,14 +210,14 @@ public class InGame implements Screen
         }
 
         // player collision with boss check
-        if (player.overlaps(boss) && TimeUtils.nanoTime() - lastPlayerCrashTime > 3000_000_000L){
+        /*if (player.overlaps(boss) && TimeUtils.nanoTime() - lastPlayerCrashTime > 3000_000_000L){
             lastPlayerCrashTime = TimeUtils.nanoTime();
             player.menerimadamage(30);
             System.out.println("player ship collide with the boss ship");
-        }
-
-
+        }*/
     }
+
+    //=========================================================================FUNGSI-FUNGSI BUATAN KITA=========================================================================
 
     //gerakan player pake wasd
     private void move()
@@ -231,49 +250,48 @@ public class InGame implements Screen
         {
             player.y += 300 * Gdx.graphics.getDeltaTime();
         }
-    }
 
+        //PENCET SPASI BUAT TAMBAH SCORE 100 BUAT SPAWN BOSS
+        if(Gdx.input.isKeyPressed(Input.Keys.SPACE))
+        {
+            enemyDestroyed += 100;
+        }
+    }
 
     //nembak laser pas pencet spasi dan setelah lewat jeda
     private void shoot()
     {
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE))
-        {
-            if(TimeUtils.nanoTime() - lastProjectileTime > 1000_000_000)
-            {
-                spawnLaserPulse();
-            }
-        }
+
     }
 
     //fungsi spawn bossnya
     private void spawnBoss()
     {
-        touchSide = 1;
-        boss = new Boss();
-        boss.x = 400-100;
-        boss.y = 750;
-        boss.height = 200;
-        boss.width = 200;
-        System.out.println("boss spawned");
+        getEnemyBatch(11);
     }
 
     //gerakan kanan kiri boss
     private void bossMove()
     {
-        if (boss.x <0){
-            boss.x = 1;
+        if(enemies.get(0).x < 0)
+        {
+            enemies.get(0).x = 1;
             touchSide++;
-        } else if (boss.x > 800-200) {
-            boss.x = 800-199;
-            touchSide++;
+        }
 
+        else if (enemies.get(0).x > 800-200)
+        {
+            enemies.get(0).x = 800-199;
+            touchSide++;
         }
-        if (touchSide % 2 == 0){
-            boss.x += 100 * Gdx.graphics.getDeltaTime();
+
+        if(touchSide % 2 == 0)
+        {
+            enemies.get(0).x += 100 * Gdx.graphics.getDeltaTime();
         }
-        else {
-            boss.x -= 100 * Gdx.graphics.getDeltaTime();
+        else
+        {
+            enemies.get(0).x -= 100 * Gdx.graphics.getDeltaTime();
         }
     }
 
@@ -307,8 +325,8 @@ public class InGame implements Screen
         Rectangle projectile = new Rectangle();
         projectile.width = 64;
         projectile.height = 64;
-        projectile.x = boss.x + projectile.width+6;
-        projectile.y = boss.y - projectile.height;
+        projectile.x = enemies.get(0).x + projectile.width+6;
+        projectile.y = enemies.get(0).y - projectile.height;
         projectiles.add(projectile);
         lastProjectileTime = TimeUtils.nanoTime();
     }
@@ -317,159 +335,160 @@ public class InGame implements Screen
     //musuh"nya masih diisi manual untuk sekarang
     private void getEnemyBatch(int i)
     {
+        enemies.clear();
         if(i == 0)
         {
-            enemies.clear();
-            a = new Rectangle();
+            a = new SmallEnemy();
             a.x = 272;
             a.y = 750;
             enemies.add(a);
-            a = new Rectangle();
+            a = new SmallEnemy();
             a.x = 464;
             a.y = 750;
             enemies.add(a);
         }
         else if(i == 1)
         {
-            enemies.clear();
-            a = new Rectangle();
+            a = new SmallEnemy();
             a.x = 272;
             a.y = 750;
             enemies.add(a);
-            a = new Rectangle();
+            a = new SmallEnemy();
             a.x = 432;
             a.y = 750;
             enemies.add(a);
         }
         else if(i == 2)
         {
-            enemies.clear();
-            a = new Rectangle();
+            a = new SmallEnemy();
             a.x = 240;
             a.y = 750;
             enemies.add(a);
-            a = new Rectangle();
+            a = new SmallEnemy();
             a.x = 464;
             a.y = 750;
             enemies.add(a);
         }
         else if(i == 3)
         {
-            enemies.clear();
-            a = new Rectangle();
+            a = new SmallEnemy();
             a.x = 272;
             a.y = 750;
             enemies.add(a);
-            a = new Rectangle();
+            a = new SmallEnemy();
             a.x = 464;
             a.y = 750;
             enemies.add(a);
-            a = new Rectangle();
+            a = new SmallEnemy();
             a.x = 240;
             a.y = 750;
             enemies.add(a);
-            a = new Rectangle();
+            a = new SmallEnemy();
             a.x = 432;
             a.y = 750;
             enemies.add(a);
         }
         else if(i == 4)
         {
-            enemies.clear();
-            a = new Rectangle();
+            a = new SmallEnemy();
             a.x = 240;
             a.y = 750;
             enemies.add(a);
-            a = new Rectangle();
+            a = new SmallEnemy();
             a.x = 432;
             a.y = 750;
             enemies.add(a);
         }
         else if(i == 5)
         {
-            enemies.clear();
-            a = new Rectangle();
+            a = new SmallEnemy();
             a.x = 300;
             a.y = 750;
             enemies.add(a);
-            a = new Rectangle();
+            a = new SmallEnemy();
             a.x = 600;
             a.y = 750;
             enemies.add(a);
         }
         else if(i == 6)
         {
-            enemies.clear();
-            a = new Rectangle();
+            a = new SmallEnemy();
             a.x = 654;
             a.y = 750;
             enemies.add(a);
-            a = new Rectangle();
+            a = new SmallEnemy();
             a.x = 734;
             a.y = 750;
             enemies.add(a);
         }
         else if(i == 7)
         {
-            enemies.clear();
-            a = new Rectangle();
+            a = new SmallEnemy();
             a.x = 372;
             a.y = 750;
             enemies.add(a);
-            a = new Rectangle();
+            a = new SmallEnemy();
             a.x = 100;
             a.y = 750;
             enemies.add(a);
         }
         else if(i == 8)
         {
-            enemies.clear();
-            a = new Rectangle();
+            a = new SmallEnemy();
             a.x = 97;
             a.y = 750;
             enemies.add(a);
-            a = new Rectangle();
+            a = new SmallEnemy();
             a.x = 754;
             a.y = 750;
             enemies.add(a);
         }
         else if(i == 9)
         {
-            enemies.clear();
-            a = new Rectangle();
+            a = new SmallEnemy();
             a.x = 675;
             a.y = 750;
             enemies.add(a);
-            a = new Rectangle();
+            a = new SmallEnemy();
             a.x = 213;
             a.y = 750;
             enemies.add(a);
         }
         else if(i == 10)
         {
-            enemies.clear();
-            a = new Rectangle();
+            a = new SmallEnemy();
             a.x = 272;
             a.y = 750;
             enemies.add(a);
-            a = new Rectangle();
+            a = new SmallEnemy();
             a.x = 464;
             a.y = 750;
+            enemies.add(a);
+        }
+        else if(i == 11)
+        {
+            a = new SmallEnemy();
+            a.x = 400-100;
+            a.y = 750;
+            a.height = 200;
+            a.width = 200;
             enemies.add(a);
         }
         else
         {
-            enemies.clear();
-            a = new Rectangle();
+            a = new Boss();
             a.x = 272;
             a.y = 750;
             enemies.add(a);
-            a = new Rectangle();
+            a = new Boss();
             a.x = 464;
             a.y = 750;
             enemies.add(a);
         }
+        lastSpawnTime = TimeUtils.nanoTime();
     }
+
+    //============================================================FUNGSI BAWAAN YG TDK DIPAKE====================================================================================
 
     @Override
     public void resize(int width, int height)

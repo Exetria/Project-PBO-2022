@@ -1,5 +1,5 @@
 package com.project.game;
-//a
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
@@ -45,8 +45,8 @@ public class MainMenu implements Screen
         game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();
-        game.font.draw(game.batch, "Alien Shooter", 300, 370);
-        game.font.draw(game.batch, "Click to Start", 300, 350);
+        game.font.draw(game.batch, "Alien Shooter", 350, 670);
+        game.font.draw(game.batch, "Click to Start", 350, 650);
         game.batch.end();
 
         if (Gdx.input.isTouched())

@@ -1,64 +1,67 @@
 package com.project.game;
-//a
+
 import com.badlogic.gdx.math.Rectangle;
 
 // interface
 
-public abstract class Enemy extends Rectangle{
-    private int HP;
-    private int Damage;
+public abstract class Enemy extends Rectangle
+{
+    private int hp;
+    private int damage;
 
     //konstruktor
-    Enemy() { // musuh kecil
-        this.HP = 10;
-        Damage = 5;
+    Enemy(int hp, int damage)
+    {
+        this.hp = hp;
+        damage = damage;
     }
 
-    public void menerimadamage(int damage) {
-        this.HP = this.HP - damage;
+    public void menerimadamage(int damage)
+    {
+        this.hp = this.hp - damage;
 
-    if (this.HP <= 0){
+    if(this.hp <= 0)
+        {
+            //mati
+        }
+    }
 
+    public void setHP(int HP){
+        this.hp = HP;
     }
-    }
-
-    public int getDamage(){
-        return Damage;
-    }
-    
     public void setDamage(int damage){
-        this.Damage = damage;
+        this.damage = damage;
     }
 
     public int getHP(){
-        return HP;
+        return hp;
     }
-    
-    public void setHP(int HP){
-        this.HP = HP;
+    public int getDamage(){
+        return damage;
+    }
+
+}
+
+class SmallEnemy extends Enemy
+{
+    SmallEnemy()
+    {
+        super(10, 5);
     }
 }
 
-class Asteroid extends Enemy{
-
-    Asteroid(){
-        setDamage(10);
-        setHP(1);
-    }
-
-    public void menerimadamage(int damage){
-        super.menerimadamage(damage);
+class Boss extends Enemy
+{
+    Boss()
+    {
+        super(150, 20);
     }
 }
 
-class Boss extends Enemy {
-
-    Boss (){
-        setDamage(20);
-        setHP(150);
-    }
-
-    public void menerimadamage(int damage){
-        super.menerimadamage(damage);
+class Asteroid extends Enemy
+{
+    Asteroid()
+    {
+        super(1, 10);
     }
 }

@@ -19,11 +19,10 @@ public abstract class Enemy extends Rectangle
     public void menerimadamage(int damage)
     {
         this.hp = this.hp - damage;
-
-    if(this.hp <= 0)
-        {
-            //mati
-        }
+        if(this.hp <= 0)
+            {
+                this.hp = 0;
+            }
     }
 
     public void setHP(int HP){

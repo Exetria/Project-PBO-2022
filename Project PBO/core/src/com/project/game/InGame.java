@@ -63,12 +63,10 @@ public class InGame implements Screen
         player.width = 64;
         player.height = 64;
 
-        //spawnBoss();
         lasers = new Array<Rectangle>();
         spawnLaserPulse();
 
         projectiles = new Array<Rectangle>();
-        //spawnProjectile();
 
         asteroids = new Array<Enemy>();
         spawnAsteroids();
@@ -114,6 +112,7 @@ public class InGame implements Screen
         {
             game.batch.draw(asteroidImg, asteroid.x, asteroid.y);
         }
+
         if(!bossState)
         {
             for (Rectangle enemy : enemies)
@@ -137,7 +136,7 @@ public class InGame implements Screen
         //kalo bossnya lagi ada, nanti pake fungsi paling atas
         //yg kedua dirun kalo score 100 (transisi ke boss state)
         //yg ketiga dirun kalo keadaan biasa
-        if(bossState)
+        if(bossState && enemies.get(0).getHP() > 0)
         {
             bossMove();
             //spawn peluru boss / detik
@@ -146,9 +145,14 @@ public class InGame implements Screen
                 spawnProjectile();
             }
         }
+        else if(enemies.get(0).getHP() <= 0)
+        {
+            bossState = false;
+        }
         else if(enemyDestroyed % 100 == 0 && enemyDestroyed > 0)
         {
             spawnBoss();
+            i = 1;
             bossState = true;
         }
         else
@@ -169,16 +173,23 @@ public class InGame implements Screen
         if (TimeUtils.nanoTime() - lastAttackTime > 1000_000_000)
             spawnLaserPulse();
 
-
-
         //=====================================================================COLLISION DETECTION===============================================================================
         //peluru player jalan keatas
         Iterator<Rectangle> iterLaser = lasers.iterator();
         while (iterLaser.hasNext()) {
             Rectangle laser = iterLaser.next();
             laser.y += 300 * Gdx.graphics.getDeltaTime();
-            if (laser.y + 28 > 950)
+            // laser go out of bound
+            if (laser.y + 28 > 950) {
                 iterLaser.remove();
+            }
+
+            if (laser.overlaps(enemies.get(0)) && enemies.get(0).getHP() > 0)
+            {
+                iterLaser.remove();
+                enemies.get(0).menerimadamage(player.getLaserDmg());
+            }
+
         }
 
         //peluru boss jalan ke bawah
@@ -190,7 +201,7 @@ public class InGame implements Screen
             if (projectile.y < 0 || projectile.overlaps(player))
             {
                 iterBossProjectile.remove();
-//                System.out.println("boss projectile overlaps with player");
+                player.menerimadamage(enemies.get(0).getDamage()); // edit baru
             }
         }
 
@@ -210,11 +221,12 @@ public class InGame implements Screen
         }
 
         // player collision with boss check
-        /*if (player.overlaps(boss) && TimeUtils.nanoTime() - lastPlayerCrashTime > 3000_000_000L){
+        /*
+        if (player.overlaps(boss) && TimeUtils.nanoTime() - lastPlayerCrashTime > 3000_000_000L){
             lastPlayerCrashTime = TimeUtils.nanoTime();
             player.menerimadamage(30);
             System.out.println("player ship collide with the boss ship");
-        }*/
+         */
     }
 
     //=========================================================================FUNGSI-FUNGSI BUATAN KITA=========================================================================
@@ -259,9 +271,8 @@ public class InGame implements Screen
     }
 
     //nembak laser pas pencet spasi dan setelah lewat jeda
-    private void shoot()
+    private void shoot() //coba2
     {
-
     }
 
     //fungsi spawn bossnya

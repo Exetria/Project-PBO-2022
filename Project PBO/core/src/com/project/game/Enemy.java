@@ -32,10 +32,12 @@ public abstract class Enemy extends Rectangle
         this.damage = damage;
     }
 
-    public int getHP(){
+    public int getHP()
+    {
         return hp;
     }
-    public int getDamage(){
+    public int getDamage()
+    {
         return damage;
     }
 

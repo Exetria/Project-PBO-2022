@@ -11,19 +11,34 @@ public class Player extends Rectangle
     private int hp;
     private int xp;
     private int score;
+
+    public int getHp() {
+        return hp;
+    }
+
     private int laserDmg;
+
+    public int getLaserDmg() {
+        return laserDmg;
+    }
 
     Player()
     {
         this.hp = 100;
         this.xp = 0;
         this.score = 0;
-        this.laserDmg = 10;
+        this.laserDmg = 50;
     }
 
     public void menerimadamage(int damage)
     {
-        this.hp -= damage;
+        if (this.hp > 0)
+        {
+            this.hp = this.hp - damage;
+            if (this.hp <= 0){
+                this.hp = 0;
+            }
+        }
     }
 
 }

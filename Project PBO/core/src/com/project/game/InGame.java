@@ -62,13 +62,13 @@ public class InGame implements Screen
         player.width = 64;
         player.height = 64;
 
-        //spawnBoss();
+        spawnBoss();
 
         lasers = new Array<Rectangle>();
-        //spawnLaserPulse();
+        spawnLaserPulse();
 
         projectiles = new Array<Rectangle>();
-        //spawnProjectile();
+        spawnProjectile();
 
         asteroids = new Array<Enemy>();
         spawnAsteroids();
@@ -91,31 +91,23 @@ public class InGame implements Screen
         camera.update();
 
         game.batch.begin();
-
         game.batch.draw(playerImg, player.x, player.y);
-
         for (Rectangle laser : lasers)
         {
             game.batch.draw(laserImg, laser.x, laser.y);
         }
-
         for (Rectangle projectile : projectiles)
         {
             game.batch.draw(projectileImg, projectile.x, projectile.y);
         }
-
         for (Enemy asteroid : asteroids)
         {
             game.batch.draw(asteroidImg, asteroid.x, asteroid.y);
         }
-
         game.batch.draw(bossImg,boss.x,boss.y);
-
         game.batch.end();
 
         move();
-        shoot();
-        //bossMove();
 
         //fungsi buat wave" musuhnya (belum disessuaiin sama file ini)
         /*if(bossState && enemyDestroyed % 100 == 0)
@@ -140,21 +132,25 @@ public class InGame implements Screen
             }
         }*/
 
+        if (boss.getHP() > 0){ // edit baru
+            bossMove();
 
-
-
-        //spawn peluru boss / detik
-        if (TimeUtils.nanoTime() - lastProjectileTime > 1000_000_000){
-            spawnProjectile();
+            //spawn peluru boss / detik
+            if (TimeUtils.nanoTime() - lastProjectileTime > 1000_000_000){
+                spawnProjectile();
+            }
         }
 
         //spawn asteroid / detik
-        if (TimeUtils.nanoTime() - lastAsteroidTime > 1000_000_000)
+        if (TimeUtils.nanoTime() - lastAsteroidTime > 1000_000_000){
             spawnAsteroids();
+        }
 
-        // if (TimeUtils.nanoTime() - lastAttackTime > 1000000000)
-        //     spawnLaserPulse();
-
+        //spawn laser / detik
+//        shoot(); // pakai space bar
+         if (TimeUtils.nanoTime() - lastAttackTime > 1000_000_000){
+             spawnLaserPulse();
+         }
 
 
         //peluru player jalan keatas
@@ -162,27 +158,43 @@ public class InGame implements Screen
         while (iterLaser.hasNext()) {
             Rectangle laser = iterLaser.next();
             laser.y += 300 * Gdx.graphics.getDeltaTime();
-            if (laser.y + 28 > 950)
+            // laser go out of bound
+            if (laser.y + 28 > 950) {
                 iterLaser.remove();
+            }
+
+            if (laser.overlaps(boss) && boss.getHP() > 0) { // edit baru
+                iterLaser.remove();
+                System.out.println("laser hit the boss");
+                boss.menerimadamage(player.getLaserDmg());
+                System.out.println("boss hp: " + boss.getHP());
+            }
+
         }
 
         //peluru boss jalan ke bawah
         Iterator<Rectangle> iterBossProjectile = projectiles.iterator();
-        while (iterBossProjectile.hasNext()) {
+        while (iterBossProjectile.hasNext())
+        {
             Rectangle projectile = iterBossProjectile.next();
             projectile.y -= 300 * Gdx.graphics.getDeltaTime();
-            if (projectile.y < 0 || projectile.overlaps(player)){
+            if (projectile.y < 0 || projectile.overlaps(player))
+            {
                 iterBossProjectile.remove();
 //                System.out.println("boss projectile overlaps with player");
+                player.menerimadamage(boss.getDamage()); // edit baru
+                System.out.println("Player HP: " + player.getHp());
             }
         }
 
         //asteroid jatuh ke bawah
         Iterator<Enemy> iterAsteroid = asteroids.iterator();
-        while (iterAsteroid.hasNext()){
+        while (iterAsteroid.hasNext())
+        {
             Enemy asteroid = iterAsteroid.next();
             asteroid.y -= 300 * Gdx.graphics.getDeltaTime();
-            if (asteroid.y < 0 || asteroid.overlaps(player)){
+            if (asteroid.y < 0 || asteroid.overlaps(player))
+            {
                 iterAsteroid.remove();
                 player.menerimadamage(asteroid.getDamage());
 //                System.out.println("asteroid overlaps with player");
@@ -196,7 +208,6 @@ public class InGame implements Screen
             player.menerimadamage(30);
             System.out.println("player ship collide with the boss ship");
         }
-
 
     }
 
@@ -235,14 +246,10 @@ public class InGame implements Screen
 
 
     //nembak laser pas pencet spasi dan setelah lewat jeda
-    private void shoot()
+    private void shoot() //coba2
     {
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE))
-        {
-            if(TimeUtils.nanoTime() - lastProjectileTime > 1000_000_000)
-            {
-                spawnLaserPulse();
-            }
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && TimeUtils.nanoTime() - lastAttackTime > 1000_000_000){
+            spawnLaserPulse();
         }
     }
 

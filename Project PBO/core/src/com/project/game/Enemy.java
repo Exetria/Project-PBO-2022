@@ -1,5 +1,5 @@
 package com.project.game;
-//a
+
 import com.badlogic.gdx.math.Rectangle;
 
 // interface
@@ -14,12 +14,15 @@ public abstract class Enemy extends Rectangle{
         Damage = 5;
     }
 
-    public void menerimadamage(int damage) {
-        this.HP = this.HP - damage;
-
-    if (this.HP <= 0){
-
-    }
+    public void menerimadamage(int damage)
+    {
+        if (this.HP > 0)
+        {
+            this.HP = this.HP - damage;
+            if (this.HP <= 0){
+                this.HP = 0;
+            }
+        }
     }
 
     public int getDamage(){

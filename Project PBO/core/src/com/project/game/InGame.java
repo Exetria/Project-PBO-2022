@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -26,6 +27,7 @@ public class InGame implements Screen
     private OrthographicCamera camera;
     final Music inGameMusic;
     private Music bossMusic;
+    private BitmapFont font;
 
     Player player;
     Enemy boss;
@@ -37,7 +39,7 @@ public class InGame implements Screen
     Array<Enemy> enemies;
     Array<Rectangle> enemiesTrans;
 
-    long lastAttackTime, lastProjectileTime, lastAsteroidTime, lastSpawnTime;
+    long lastAttackTime, lastProjectileTime, lastAsteroidTime, lastSpawnTime, lastPlayerCrashTime;
     private int score;
     int enemyDestroyed, touchSide, i;
     boolean bossState;                                          //maksudnya state sekarang lagi boss fight atau tidak
@@ -53,6 +55,8 @@ public class InGame implements Screen
         asteroidImg = new Texture("asteroid.png");
         inGameMusic = Gdx.audio.newMusic(Gdx.files.internal("inGame.mp3"));
         projectileImg = new Texture("projectile.png");
+        font = new BitmapFont(); // use libGDX's default Arial font
+        font.getData().setScale(1.5f);
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false,800,950);
@@ -130,6 +134,9 @@ public class InGame implements Screen
                 game.batch.draw(bossImg, enemy.x, enemy.y);
             }
         }
+
+        font.draw(game.batch, "Enemy HP: " + enemies.get(0).getHP(), 400-32, 600-16);
+        font.draw(game.batch, "Player HP: " + player.getHp(), 400-32, 32);
         game.batch.end();
 
         //==================================================================SPAWN OBJECT-OBJECT==================================================================================
@@ -188,6 +195,7 @@ public class InGame implements Screen
             {
                 iterLaser.remove();
                 enemies.get(0).menerimadamage(player.getLaserDmg());
+                System.out.println("boss hp: " + enemies.get(0).getHP());
             }
         }
 
@@ -222,12 +230,11 @@ public class InGame implements Screen
         }
 
         // player collision with boss check
-        /*
-        if (player.overlaps(boss) && TimeUtils.nanoTime() - lastPlayerCrashTime > 3000_000_000L){
+        if (player.overlaps(enemies.get(0)) && TimeUtils.nanoTime() - lastPlayerCrashTime > 3000_000_000L) {
             lastPlayerCrashTime = TimeUtils.nanoTime();
             player.menerimadamage(30);
-            System.out.println("player ship collide with the boss ship");
-         */
+        }
+
     }
 
     //=========================================================================FUNGSI-FUNGSI BUATAN KITA=========================================================================
@@ -478,7 +485,7 @@ public class InGame implements Screen
         }
         else if(i == 11)
         {
-            a = new SmallEnemy();
+            a = new Boss();
             a.x = 400-100;
             a.y = 750;
             a.height = 200;
@@ -487,11 +494,11 @@ public class InGame implements Screen
         }
         else
         {
-            a = new Boss();
+            a = new SmallEnemy();
             a.x = 272;
             a.y = 750;
             enemies.add(a);
-            a = new Boss();
+            a = new SmallEnemy();
             a.x = 464;
             a.y = 750;
             enemies.add(a);
@@ -534,5 +541,6 @@ public class InGame implements Screen
         bossImg.dispose();
         laserImg.dispose();
         asteroidImg.dispose();
+        font.dispose();
     }
 }

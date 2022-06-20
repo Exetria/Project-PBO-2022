@@ -13,7 +13,7 @@ public abstract class Enemy extends Rectangle
     Enemy(int hp, int damage)
     {
         this.hp = hp;
-        damage = damage;
+        this.damage = damage;
     }
 
     public void menerimadamage(int damage)
@@ -47,7 +47,7 @@ class SmallEnemy extends Enemy
 {
     SmallEnemy()
     {
-        super(10, 5);
+        super(20, 5);
     }
 }
 

@@ -21,6 +21,10 @@ public class Player extends Rectangle
         return laserDmg;
     }
 
+    public int getScore() {
+        return score;
+    }
+
     Player()
     {
         this.hp = 100;
@@ -38,6 +42,10 @@ public class Player extends Rectangle
                 this.hp = 0;
             }
         }
+    }
+
+    public void addScore(int score){
+        this.score += score;
     }
 
 }

@@ -8,21 +8,28 @@ public abstract class Enemy extends Rectangle
 {
     private int hp;
     private int damage;
+    private int score;
 
     //konstruktor
-    Enemy(int hp, int damage)
+    Enemy(int hp, int damage, int score)
     {
         this.hp = hp;
         this.damage = damage;
+        this.score = score;
     }
 
-    public void menerimadamage(int damage)
+    public void menerimadamage(int damage, Player player)
     {
         this.hp = this.hp - damage;
         if(this.hp <= 0)
             {
                 this.hp = 0;
+                player.addScore(this.score);
             }
+    }
+
+    public void dropScore(Player player){
+        player.addScore(this.score);
     }
 
     public void setHP(int HP){
@@ -47,7 +54,7 @@ class SmallEnemy extends Enemy
 {
     SmallEnemy()
     {
-        super(20, 5);
+        super(20, 5, 10);
     }
 }
 
@@ -55,7 +62,7 @@ class Boss extends Enemy
 {
     Boss()
     {
-        super(150, 20);
+        super(150, 20, 100);
     }
 }
 
@@ -63,6 +70,6 @@ class Asteroid extends Enemy
 {
     Asteroid()
     {
-        super(1, 10);
+        super(1, 10, 1);
     }
 }

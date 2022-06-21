@@ -42,6 +42,7 @@ public class InGame implements Screen
     long lastAttackTime, lastProjectileTime, lastAsteroidTime, lastSpawnTime, lastPlayerCrashTime;
     private int score;
     int enemyDestroyed, touchSide, i;
+    double scoreMultiplier;
     boolean bossState;                                          //maksudnya state sekarang lagi boss fight atau tidak
 
     public InGame(Shooter game, AssetManager assetManager)
@@ -147,12 +148,11 @@ public class InGame implements Screen
             {
                 game.batch.draw(bossImg, enemy.x, enemy.y);
             }
-        }
-
-        if (bossState) {
             font.draw(game.batch, "Enemy HP: " + enemies.get(0).getHP(), 400 - 32, 600 - 16);
         }
+
         font.draw(game.batch, "Player HP: " + player.getHp(), 400-32, 32);
+        font.draw(game.batch, "Score: " + player.getScore(), 10, 740);
         game.batch.end();
 
         //==================================================================SPAWN OBJECT-OBJECT==================================================================================
@@ -210,8 +210,9 @@ public class InGame implements Screen
             if(laser.overlaps(enemies.get(0)) && enemies.get(0).getHP() > 0)
             {
                 iterLaser.remove();
-                enemies.get(0).menerimadamage(player.getLaserDmg());
+                enemies.get(0).menerimadamage(player.getLaserDmg(), player);
                 System.out.println("boss hp: " + enemies.get(0).getHP());
+                System.out.println("player score: " + player.getScore());
             }
         }
 
@@ -394,6 +395,8 @@ public class InGame implements Screen
             a.x = 432;
             a.y = 750;
             enemies.add(a);
+
+            scoreMultiplier = 0.5;
         }
         else if(i == 2)
         {
@@ -405,6 +408,8 @@ public class InGame implements Screen
             a.x = 464;
             a.y = 750;
             enemies.add(a);
+
+            scoreMultiplier = 1;
         }
         else if(i == 3)
         {
@@ -424,6 +429,8 @@ public class InGame implements Screen
             a.x = 432;
             a.y = 750;
             enemies.add(a);
+
+            scoreMultiplier = 1.5;
         }
         else if(i == 4)
         {
@@ -435,6 +442,8 @@ public class InGame implements Screen
             a.x = 432;
             a.y = 750;
             enemies.add(a);
+
+            scoreMultiplier = 2;
         }
         else if(i == 5)
         {
@@ -446,6 +455,8 @@ public class InGame implements Screen
             a.x = 600;
             a.y = 750;
             enemies.add(a);
+
+            scoreMultiplier = 2.5;
         }
         else if(i == 6)
         {
@@ -457,6 +468,8 @@ public class InGame implements Screen
             a.x = 734;
             a.y = 750;
             enemies.add(a);
+
+            scoreMultiplier = 3;
         }
         else if(i == 7)
         {
@@ -468,6 +481,8 @@ public class InGame implements Screen
             a.x = 100;
             a.y = 750;
             enemies.add(a);
+
+            scoreMultiplier = 3.5;
         }
         else if(i == 8)
         {
@@ -479,6 +494,8 @@ public class InGame implements Screen
             a.x = 754;
             a.y = 750;
             enemies.add(a);
+
+            scoreMultiplier = 4;
         }
         else if(i == 9)
         {
@@ -490,6 +507,8 @@ public class InGame implements Screen
             a.x = 213;
             a.y = 750;
             enemies.add(a);
+
+            scoreMultiplier = 4.5;
         }
         else if(i == 10)
         {
@@ -501,6 +520,8 @@ public class InGame implements Screen
             a.x = 464;
             a.y = 750;
             enemies.add(a);
+
+            scoreMultiplier = 5;
         }
         else if(i == 11)
         {
@@ -510,6 +531,8 @@ public class InGame implements Screen
             a.height = 200;
             a.width = 200;
             enemies.add(a);
+
+            scoreMultiplier = 10;
         }
         else
         {

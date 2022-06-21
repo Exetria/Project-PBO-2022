@@ -23,7 +23,7 @@ public class InGame implements Screen
 {
     final Shooter game;
 
-    private Texture playerImg,asteroidImg,laserImg,enemyImg,bossImg,projectileImg;
+    private Texture playerImg,asteroidImg,laserImg,enemyImg,bossImg,projectileImg, backgroundImg;
     private OrthographicCamera camera;
     final Music inGameMusic;
     private Music bossMusic;
@@ -55,6 +55,7 @@ public class InGame implements Screen
         asteroidImg = new Texture("asteroid.png");
         inGameMusic = Gdx.audio.newMusic(Gdx.files.internal("inGame.mp3"));
         projectileImg = new Texture("projectile.png");
+        backgroundImg = new Texture("background.png");
         font = assetManager.get(Assets.menuFont); // use the title font
         font.getData().setScale(0.2f);//set size for the font
 
@@ -103,6 +104,7 @@ public class InGame implements Screen
         //==================================================================GAMBAR OBJECT-OBJECT=================================================================================
 
         game.batch.begin();
+        game.batch.draw(backgroundImg,0,0);
         game.batch.draw(playerImg, player.x, player.y);
         for (Rectangle laser : lasers)
         {

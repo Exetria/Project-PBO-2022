@@ -222,11 +222,11 @@ public class InGame implements Screen
         {
             Rectangle projectile = iterBossProjectile.next();
             projectile.y -= 300 * Gdx.graphics.getDeltaTime();
-            if(projectile.y < -64)
+            if(projectile.y < -64 || projectile.y < 0)
             {
                 iterBossProjectile.remove();
             }
-            if (projectile.y < 0 || projectile.overlaps(player))
+            if (projectile.overlaps(player))
             {
                 iterBossProjectile.remove();
                 player.menerimadamage(enemies.get(0).getDamage()); // edit baru

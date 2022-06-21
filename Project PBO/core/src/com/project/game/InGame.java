@@ -135,7 +135,9 @@ public class InGame implements Screen
             }
         }
 
-        font.draw(game.batch, "Enemy HP: " + enemies.get(0).getHP(), 400-32, 600-16);
+        if (bossState) {
+            font.draw(game.batch, "Enemy HP: " + enemies.get(0).getHP(), 400 - 32, 600 - 16);
+        }
         font.draw(game.batch, "Player HP: " + player.getHp(), 400-32, 32);
         game.batch.end();
 
@@ -222,7 +224,11 @@ public class InGame implements Screen
         {
             Enemy asteroid = iterAsteroid.next();
             asteroid.y -= 300 * Gdx.graphics.getDeltaTime();
-            if (asteroid.y < 0 || asteroid.overlaps(player))
+            if (asteroid.y < 0)
+            {
+                iterAsteroid.remove();
+            }
+            if (asteroid.overlaps(player))
             {
                 iterAsteroid.remove();
                 player.menerimadamage(asteroid.getDamage());
@@ -234,7 +240,6 @@ public class InGame implements Screen
             lastPlayerCrashTime = TimeUtils.nanoTime();
             player.menerimadamage(30);
         }
-
     }
 
     //=========================================================================FUNGSI-FUNGSI BUATAN KITA=========================================================================

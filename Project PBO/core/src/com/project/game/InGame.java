@@ -55,8 +55,8 @@ public class InGame implements Screen
         asteroidImg = new Texture("asteroid.png");
         inGameMusic = Gdx.audio.newMusic(Gdx.files.internal("inGame.mp3"));
         projectileImg = new Texture("projectile.png");
-        font = new BitmapFont(); // use libGDX's default Arial font
-        font.getData().setScale(1.5f);
+        font = assetManager.get(Assets.menuFont); // use the title font
+        font.getData().setScale(0.2f);//set size for the font
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false,800,950);

@@ -96,7 +96,7 @@ public class MainMenuScreen extends ScreenAdapter {
         stage.draw();
 
         game.batch.begin();
-        menuFont.draw(game.batch, title, Gdx.graphics.getWidth()/2-(Gdx.graphics.getWidth()/4),650);
+        menuFont.draw(game.batch, title, Gdx.graphics.getWidth()/2-(Gdx.graphics.getWidth()/4),700);
         game.batch.end();
 
     }

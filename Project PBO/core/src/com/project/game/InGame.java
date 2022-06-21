@@ -48,14 +48,26 @@ public class InGame implements Screen
     {
         this.game = game;
 
-        playerImg = new Texture("player.png");
-        enemyImg = new Texture("enemy.png");
-        bossImg = new Texture("boss.png");
-        laserImg = new Texture("laser.png");
-        asteroidImg = new Texture("asteroid.png");
+        // assets manual
+//        playerImg = new Texture("player.png");
+//        enemyImg = new Texture("enemy.png");
+//        bossImg = new Texture("boss.png");
+//        laserImg = new Texture("laser.png");
+//        asteroidImg = new Texture("asteroid.png");
+//        projectileImg = new Texture("projectile.png");
+//        backgroundImg = new Texture("background.png");
+//        font = new BitmapFont(); // use arial
         inGameMusic = Gdx.audio.newMusic(Gdx.files.internal("inGame.mp3"));
-        projectileImg = new Texture("projectile.png");
-        backgroundImg = new Texture("background.png");
+
+
+        // assets menggunakan class Assets
+        playerImg = assetManager.get(Assets.playerImg);
+        enemyImg = assetManager.get(Assets.enemyImg);
+        bossImg = assetManager.get(Assets.bossImg);
+        laserImg = assetManager.get(Assets.laserImg);
+        asteroidImg = assetManager.get(Assets.asteroidImg);
+        projectileImg = assetManager.get(Assets.projectileImg);
+        backgroundImg = assetManager.get(Assets.backgroundImg);
         font = assetManager.get(Assets.menuFont); // use the title font
         font.getData().setScale(0.2f);//set size for the font
 

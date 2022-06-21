@@ -11,12 +11,11 @@ public class Player extends Rectangle
     private int hp;
     private int xp;
     private int score;
+    private int laserDmg;
 
     public int getHp() {
         return hp;
     }
-
-    private int laserDmg;
 
     public int getLaserDmg() {
         return laserDmg;

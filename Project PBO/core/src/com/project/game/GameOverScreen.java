@@ -36,7 +36,6 @@ public class GameOverScreen implements Screen {
         font = new BitmapFont();
         font.getData().setScale(2, 2);
 
-        Save.load();
         newHighScore = Save.gd.isHighScore(Save.gd.getYourScore());
 
         if (newHighScore){
@@ -62,6 +61,18 @@ public class GameOverScreen implements Screen {
 
         if(!newHighScore){
             game.batch.end();
+
+            if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+                if(newHighScore) {
+                    Save.gd.addHighScore(
+                            Save.gd.getYourScore(),
+                            new String(newName)
+                    );
+                    Save.save();
+                }
+                game.setScreen(new MainMenuScreen(game));
+                dispose();
+            }
             return;
         }
 
@@ -89,6 +100,11 @@ public class GameOverScreen implements Screen {
                 220
         );
         sr.end();
+
+        if (Gdx.input.isTouched()) {
+            game.setScreen(new MainMenuScreen(game));
+            dispose();
+        }
 
         if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
             if(newHighScore) {

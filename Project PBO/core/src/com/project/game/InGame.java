@@ -132,23 +132,16 @@ public class InGame implements Screen
             game.batch.draw(asteroidImg, asteroid.x, asteroid.y);
         }
 
-        //kalo bukan boss fight, gambarnya pake enemy biasa
-        if(!bossState)
+        //cek apakah objeknya boss/small enemy, gambar sesuai classnya
+        for(Enemy enemy : enemies)
         {
-            for (Rectangle enemy : enemies)
-            {
+            if(enemy instanceof SmallEnemy)
                 game.batch.draw(enemyImg, enemy.x, enemy.y);
-            }
-        }
-
-        //kalo boss fight, gambar pake img boss
-        else
-        {
-            for (Rectangle enemy : enemies)
+            else if(enemy instanceof Boss)
             {
                 game.batch.draw(bossImg, enemy.x, enemy.y);
+                font.draw(game.batch, "Enemy HP: " + enemies.get(0).getHP(), 400 - 32, 600 - 16);
             }
-            font.draw(game.batch, "Enemy HP: " + enemies.get(0).getHP(), 400 - 32, 600 - 16);
         }
 
         font.draw(game.batch, "Player HP: " + player.getHp(), 400-32, 32);
@@ -176,14 +169,9 @@ public class InGame implements Screen
                 enemyDestroyed++;
             }
         }
-        else if(enemyDestroyed % 100 == 0 && enemyDestroyed > 0)
-        {
-            spawnBoss();
-            bossState = true;
-        }
         else
         {
-            if (TimeUtils.nanoTime() - lastSpawnTime > TimeUtils.millisToNanos(2000))
+            if (TimeUtils.nanoTime() - lastSpawnTime > TimeUtils.millisToNanos(2000))   //waktu untuk ganti wave
             {
                 getEnemyBatch(i);
                 i++;
@@ -213,7 +201,8 @@ public class InGame implements Screen
             }
 
             // utk boss tp msh bekerja jg utk musuh biasa
-            if (bossState){
+            if (bossState)
+            {
                 if(laser.overlaps(enemies.get(0)) && enemies.get(0).getHP() > 0)
                 {
                     iterLaser.remove();
@@ -271,10 +260,13 @@ public class InGame implements Screen
         while (iterEnemies.hasNext())
         {
             Enemy enemy = iterEnemies.next();
-            if (enemy.getHP() == 0){
+            if (enemy.getHP() == 0)
+            {
                 iterEnemies.remove();
-                if(bossState) {
-                    if (enemies.size <= 0) {
+                if(bossState)
+                {
+                    if (enemies.size <= 0)
+                    {
                         bossState = false;
                         enemyDestroyed++;
                         getEnemyBatch(1);
@@ -322,8 +314,7 @@ public class InGame implements Screen
         //PENCET SPASI BUAT TAMBAH SCORE 100 BUAT SPAWN BOSS
         if(Gdx.input.isKeyPressed(Input.Keys.SPACE))
         {
-            System.out.println("enemy destroyed: "+ enemyDestroyed);
-            enemyDestroyed = 100;
+            getEnemyBatch(11);
         }
     }
 
@@ -402,33 +393,61 @@ public class InGame implements Screen
     //musuh"nya masih diisi manual untuk sekarang
     private void getEnemyBatch(int i)
     {
+        //48 112 176 240 304 X368X 432 496 560 624 688          koordinat X
+        //622 686 750 814 878                                   koordinat Y
         enemies.clear();
-        if(i == 0)
+        if(i == 0)      //selesai
         {
+            /*
+            FORMASI
+            00000000000
+            00000000000
+            01000000010
+            00000000000
+            00000000000
+            */
             a = new SmallEnemy();
-            a.x = 272;
+            a.x = 204;
             a.y = 750;
             a.width = 64;
             a.height = 64;
             enemies.add(a);
+
             a = new SmallEnemy();
-            a.x = 464;
+            a.x = 496;
             a.y = 750;
             a.width = 64;
             a.height = 64;
             enemies.add(a);
+
+            scoreMultiplier = 1;
         }
         else if(i == 1)
         {
+            /*
+            00100000100
+            00000000000
+            00000000000
+            00000100000
+            00000000000
+            */
             a = new SmallEnemy();
-            a.x = 272;
-            a.y = 750;
+            a.x = 176;
+            a.y = 878;
             a.width = 64;
             a.height = 64;
             enemies.add(a);
+
             a = new SmallEnemy();
-            a.x = 432;
-            a.y = 750;
+            a.x = 560;
+            a.y = 878;
+            a.width = 64;
+            a.height = 64;
+            enemies.add(a);
+
+            a = new SmallEnemy();
+            a.x = 368;
+            a.y = 686;
             a.width = 64;
             a.height = 64;
             enemies.add(a);
@@ -437,58 +456,52 @@ public class InGame implements Screen
         }
         else if(i == 2)
         {
-            a = new SmallEnemy();
-            a.x = 240;
-            a.y = 750;
-            a.width = 64;
-            a.height = 64;
-            enemies.add(a);
-            a = new SmallEnemy();
-            a.x = 464;
-            a.y = 750;
-            a.width = 64;
-            a.height = 64;
-            enemies.add(a);
+
 
             scoreMultiplier = 1.5;
         }
         else if(i == 3)
         {
-            a = new SmallEnemy();
-            a.x = 272;
-            a.y = 750;
-            a.width = 64;
-            a.height = 64;
-            enemies.add(a);
-            a = new SmallEnemy();
-            a.x = 464;
-            a.y = 750;
-            a.width = 64;
-            a.height = 64;
-            enemies.add(a);
-            a = new SmallEnemy();
-            a.x = 240;
-            a.y = 750;
-            a.width = 64;
-            a.height = 64;
-            enemies.add(a);
-            a = new SmallEnemy();
-            a.x = 432;
-            a.y = 750;
-            a.width = 64;
-            a.height = 64;
-            enemies.add(a);
+
 
             scoreMultiplier = 2;
         }
         else if(i == 4)
         {
+
+
+            scoreMultiplier = 2.5;
+        }
+        else if(i == 5)
+        {
+
+
+            scoreMultiplier = 3;
+        }
+        else if(i == 6)     //selesai
+        {
+            /*
+            FORMASI
+            000000000
+            001010100
+            000101000
+            000010000
+            000000000
+            */
             a = new SmallEnemy();
-            a.x = 240;
+            a.x = 368;
+            a.y = 814;
+            a.width = 64;
+            a.height = 64;
+            enemies.add(a);
+
+            a = new SmallEnemy();
+            a.x = 304;
             a.y = 750;
             a.width = 64;
             a.height = 64;
             enemies.add(a);
+
             a = new SmallEnemy();
             a.x = 432;
             a.y = 750;
@@ -496,36 +509,23 @@ public class InGame implements Screen
             a.height = 64;
             enemies.add(a);
 
-            scoreMultiplier = 2.5;
-        }
-        else if(i == 5)
-        {
             a = new SmallEnemy();
-            a.x = 300;
-            a.y = 750;
-            a.width = 64;
-            a.height = 64;
-            enemies.add(a);
-            a = new SmallEnemy();
-            a.x = 600;
-            a.y = 750;
+            a.x = 240;
+            a.y = 814;
             a.width = 64;
             a.height = 64;
             enemies.add(a);
 
-            scoreMultiplier = 3;
-        }
-        else if(i == 6)
-        {
             a = new SmallEnemy();
-            a.x = 654;
-            a.y = 750;
+            a.x = 490;
+            a.y = 814;
             a.width = 64;
             a.height = 64;
             enemies.add(a);
+
             a = new SmallEnemy();
-            a.x = 734;
-            a.y = 750;
+            a.x = 368;
+            a.y = 686;
             a.width = 64;
             a.height = 64;
             enemies.add(a);
@@ -534,73 +534,98 @@ public class InGame implements Screen
         }
         else if(i == 7)
         {
-            a = new SmallEnemy();
-            a.x = 372;
-            a.y = 750;
-            a.width = 64;
-            a.height = 64;
-            enemies.add(a);
-            a = new SmallEnemy();
-            a.x = 100;
-            a.y = 750;
-            a.width = 64;
-            a.height = 64;
-            enemies.add(a);
+
 
             scoreMultiplier = 4;
         }
         else if(i == 8)
         {
-            a = new SmallEnemy();
-            a.x = 97;
-            a.y = 750;
-            a.width = 64;
-            a.height = 64;
-            enemies.add(a);
-            a = new SmallEnemy();
-            a.x = 754;
-            a.y = 750;
-            a.width = 64;
-            a.height = 64;
-            enemies.add(a);
+
 
             scoreMultiplier = 4.5;
         }
         else if(i == 9)
         {
+
+
+            scoreMultiplier = 5;
+        }
+        else if(i == 10)    //selesai
+        {
+            /*
+            FORMASI
+            01000000010
+            00010001000
+            00000100000
+            00010001000
+            01000000010
+            */
             a = new SmallEnemy();
-            a.x = 675;
-            a.y = 750;
+            a.x = 112;
+            a.y = 878;
             a.width = 64;
             a.height = 64;
             enemies.add(a);
+
             a = new SmallEnemy();
-            a.x = 213;
+            a.x = 624;
+            a.y = 878;
+            a.width = 64;
+            a.height = 64;
+            enemies.add(a);
+
+            a = new SmallEnemy();
+            a.x = 240;
+            a.y = 814;
+            a.width = 64;
+            a.height = 64;
+            enemies.add(a);
+
+            a = new SmallEnemy();
+            a.x = 496;
+            a.y = 814;
+            a.width = 64;
+            a.height = 64;
+            enemies.add(a);
+
+            a = new SmallEnemy();
+            a.x = 368;
             a.y = 750;
             a.width = 64;
             a.height = 64;
             enemies.add(a);
 
-            scoreMultiplier = 5;
-        }
-        else if(i == 10)
-        {
             a = new SmallEnemy();
-            a.x = 272;
-            a.y = 750;
+            a.x = 240;
+            a.y = 686;
             a.width = 64;
             a.height = 64;
             enemies.add(a);
+
             a = new SmallEnemy();
-            a.x = 464;
-            a.y = 750;
+            a.x = 496;
+            a.y = 686;
+            a.width = 64;
+            a.height = 64;
+            enemies.add(a);
+
+            a = new SmallEnemy();
+            a.x = 112;
+            a.y = 622;
+            a.width = 64;
+            a.height = 64;
+            enemies.add(a);
+
+            a = new SmallEnemy();
+            a.x = 624;
+            a.y = 622;
             a.width = 64;
             a.height = 64;
             enemies.add(a);
 
             scoreMultiplier = 5.5;
         }
-        else if(i == 11)
+        else if(i == 11)    //selesai
         {
             a = new Boss();
             a.x = 400-100;
@@ -608,23 +633,13 @@ public class InGame implements Screen
             a.height = 200;
             a.width = 200;
             enemies.add(a);
+            bossState = true;
 
             scoreMultiplier = 10;
         }
-        else
+        else                //selesai
         {
-            a = new SmallEnemy();
-            a.x = 272;
-            a.y = 750;
-            a.width = 64;
-            a.height = 64;
-            enemies.add(a);
-            a = new SmallEnemy();
-            a.x = 464;
-            a.y = 750;
-            a.width = 64;
-            a.height = 64;
-            enemies.add(a);
+            getEnemyBatch(0);
         }
         lastSpawnTime = TimeUtils.nanoTime();
     }

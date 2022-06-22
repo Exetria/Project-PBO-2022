@@ -232,6 +232,11 @@ public class InGame implements Screen
                             enemies.removeIndex(count);
                         }
                     }
+
+                    if (player.overlaps(enemy)){
+                        player.menerimadamage(enemy.getDamage());
+                        enemies.removeIndex(count);
+                    }
                     count++;
                 }
             }
@@ -286,8 +291,6 @@ public class InGame implements Screen
             Save.gd.setYourScore(player.getScore());
             game.setScreen(new GameOverScreen(game));
         }
-
-
 
 
     }

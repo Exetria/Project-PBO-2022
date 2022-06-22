@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -27,6 +28,7 @@ public class InGame implements Screen
     private OrthographicCamera camera;
     final Music inGameMusic;
     private Music bossMusic;
+    final Sound explosionSound;
     private BitmapFont font;
 
     Player player;
@@ -59,6 +61,8 @@ public class InGame implements Screen
         backgroundImg = new Texture("background.png");
         font = new BitmapFont(Gdx.files.internal("Title.fnt")); // use arial
         inGameMusic = Gdx.audio.newMusic(Gdx.files.internal("inGame.mp3"));
+        explosionSound = Gdx.audio.newSound(Gdx.files.internal("explosion.mp3"));
+
 
 
         // assets menggunakan class Assets
@@ -169,6 +173,7 @@ public class InGame implements Screen
                 bossState = false;
                 enemyDestroyed++;
                 i = 0;
+                explosionSound.play();
             }
         }
         else
@@ -229,11 +234,13 @@ public class InGame implements Screen
                         enemy.menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
                         if(enemy.getHP() <= 0)
                         {
+                            explosionSound.play();
                             enemies.removeIndex(count);
                         }
                     }
 
                     if (player.overlaps(enemy)){
+                        explosionSound.play();
                         player.menerimadamage(enemy.getDamage());
                         enemies.removeIndex(count);
                     }

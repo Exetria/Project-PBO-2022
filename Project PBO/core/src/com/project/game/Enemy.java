@@ -70,6 +70,6 @@ class Asteroid extends Enemy
 {
     Asteroid()
     {
-        super(1, 10, 1);
+        super(1, 5, 1);
     }
 }

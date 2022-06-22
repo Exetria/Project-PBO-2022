@@ -54,7 +54,15 @@ class SmallEnemy extends Enemy
 {
     SmallEnemy()
     {
-        super(20, 5, 10);
+        super(10, 5, 10);
+    }
+}
+
+class MediumEnemy extends Enemy
+{
+    MediumEnemy()
+    {
+        super(30, 10, 20);
     }
 }
 

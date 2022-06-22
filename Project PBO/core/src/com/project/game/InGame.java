@@ -279,6 +279,19 @@ public class InGame implements Screen
                 player.menerimadamage(30);
             }
         }
+
+        //Game Over
+
+        if(player.getHp() <= 0){
+            inGameMusic.stop();
+            Save.gd.setYourScore(player.getScore());
+            game.setScreen(new GameOverScreen(game));
+            dispose();
+        }
+
+
+
+
     }
 
     //=========================================================================FUNGSI-FUNGSI BUATAN KITA=========================================================================

@@ -28,7 +28,7 @@ public class InGame implements Screen
     private OrthographicCamera camera;
     final Music inGameMusic;
     private Music bossMusic;
-    final Sound explosionSound,laserSound;
+    final Sound explosionSound,laserSound,projectileSound;
     private BitmapFont font;
 
     Player player;
@@ -63,7 +63,7 @@ public class InGame implements Screen
         inGameMusic = Gdx.audio.newMusic(Gdx.files.internal("inGame.mp3"));
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("explosion.mp3"));
         laserSound = Gdx.audio.newSound(Gdx.files.internal("laserSound.mp3"));
-
+        projectileSound = Gdx.audio.newSound(Gdx.files.internal("projectileSound.mp3"));
 
 
         // assets menggunakan class Assets
@@ -168,6 +168,7 @@ public class InGame implements Screen
             if (TimeUtils.nanoTime() - lastProjectileTime > 1000_000_000 && enemies.get(0).getHP() > 0)
             {
                 spawnProjectile();
+                projectileSound.play();
             }
             else if (enemies.get(0).getHP() <= 0){
                 enemies.removeIndex(0);

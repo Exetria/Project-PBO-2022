@@ -272,7 +272,7 @@ public class InGame implements Screen
         {
             Enemy enemy = iterEnemies.next();
             if (enemy.getHP() == 0){
-                enemies.removeValue(enemy,true);
+                iterEnemies.remove();
                 if(bossState) {
                     if (enemies.size <= 0) {
                         bossState = false;

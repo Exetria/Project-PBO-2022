@@ -50,26 +50,26 @@ public class InGame implements Screen
         this.game = game;
 
         // assets manual
-//        playerImg = new Texture("player.png");
-//        enemyImg = new Texture("enemy.png");
-//        bossImg = new Texture("boss.png");
-//        laserImg = new Texture("laser.png");
-//        asteroidImg = new Texture("asteroid.png");
-//        projectileImg = new Texture("projectile.png");
-//        backgroundImg = new Texture("background.png");
-//        font = new BitmapFont(); // use arial
+        playerImg = new Texture("player.png");
+        enemyImg = new Texture("enemy.png");
+        bossImg = new Texture("boss.png");
+        laserImg = new Texture("laser.png");
+        asteroidImg = new Texture("asteroid.png");
+        projectileImg = new Texture("projectile.png");
+        backgroundImg = new Texture("background.png");
+        font = new BitmapFont(); // use arial
         inGameMusic = Gdx.audio.newMusic(Gdx.files.internal("inGame.mp3"));
 
 
         // assets menggunakan class Assets
-        playerImg = assetManager.get(Assets.playerImg);
-        enemyImg = assetManager.get(Assets.enemyImg);
-        bossImg = assetManager.get(Assets.bossImg);
-        laserImg = assetManager.get(Assets.laserImg);
-        asteroidImg = assetManager.get(Assets.asteroidImg);
-        projectileImg = assetManager.get(Assets.projectileImg);
-        backgroundImg = assetManager.get(Assets.backgroundImg);
-        font = assetManager.get(Assets.menuFont); // use the title font
+//        playerImg = assetManager.get(Assets.playerImg);
+//        enemyImg = assetManager.get(Assets.enemyImg);
+//        bossImg = assetManager.get(Assets.bossImg);
+//        laserImg = assetManager.get(Assets.laserImg);
+//        asteroidImg = assetManager.get(Assets.asteroidImg);
+//        projectileImg = assetManager.get(Assets.projectileImg);
+//        backgroundImg = assetManager.get(Assets.backgroundImg);
+//        font = assetManager.get(Assets.menuFont); // use the title font
         font.getData().setScale(0.2f);//set size for the font
 
         camera = new OrthographicCamera();
@@ -90,10 +90,10 @@ public class InGame implements Screen
         spawnAsteroids();
 
         enemies = new Array<Enemy>();
-        getEnemyBatch(1);
+        getEnemyBatch(0);
 
         bossState = false;
-        i = 2;                          //i = 2 karena batch ke-1 udah masuk jadi nanti mulai dari 2
+        i = 1;                          //i = 2 karena batch ke-1 udah masuk jadi nanti mulai dari 2
 
         enemyDestroyed = 0;
     }
@@ -165,10 +165,15 @@ public class InGame implements Screen
         if(bossState)
         {
             bossMove();
-            //spawn peluru boss / detik
-            if (TimeUtils.nanoTime() - lastProjectileTime > 1000_000_000)
+            //spawn peluru boss / detik ketika HP > 0
+            if (TimeUtils.nanoTime() - lastProjectileTime > 1000_000_000 && enemies.get(0).getHP() > 0)
             {
                 spawnProjectile();
+            }
+            else if (enemies.get(0).getHP() <= 0){
+                enemies.removeIndex(0);
+                bossState = false;
+                enemyDestroyed++;
             }
         }
         else if(enemyDestroyed % 100 == 0 && enemyDestroyed > 0)
@@ -182,7 +187,7 @@ public class InGame implements Screen
             {
                 getEnemyBatch(i);
                 i++;
-                if (i > 10)
+                if (i > 11)
                     i = 1;
             }
         }
@@ -207,13 +212,17 @@ public class InGame implements Screen
                 iterLaser.remove();
             }
 
-            if(laser.overlaps(enemies.get(0)) && enemies.get(0).getHP() > 0)
-            {
-                iterLaser.remove();
-                enemies.get(0).menerimadamage(player.getLaserDmg(), player);
-                System.out.println("boss hp: " + enemies.get(0).getHP());
-                System.out.println("player score: " + player.getScore());
+            // utk boss tp msh bekerja jg utk musuh biasa
+            if (bossState){
+                if(laser.overlaps(enemies.get(0)) && enemies.get(0).getHP() > 0)
+                {
+                    iterLaser.remove();
+                    enemies.get(0).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                    System.out.println("boss hp: " + enemies.get(0).getHP());
+                    System.out.println("player score: " + player.getScore());
+                }
             }
+
         }
 
         //peluru boss jalan ke bawah
@@ -222,7 +231,7 @@ public class InGame implements Screen
         {
             Rectangle projectile = iterBossProjectile.next();
             projectile.y -= 300 * Gdx.graphics.getDeltaTime();
-            if(projectile.y < -64 || projectile.y < 0)
+            if(projectile.y < 0)
             {
                 iterBossProjectile.remove();
             }
@@ -251,10 +260,13 @@ public class InGame implements Screen
         }
 
         // player collision with boss check
-        if (player.overlaps(enemies.get(0)) && TimeUtils.nanoTime() - lastPlayerCrashTime > 3000_000_000L) {
-            lastPlayerCrashTime = TimeUtils.nanoTime();
-            player.menerimadamage(30);
+        if (bossState){
+            if (player.overlaps(enemies.get(0)) && TimeUtils.nanoTime() - lastPlayerCrashTime > 3000_000_000L) {
+                lastPlayerCrashTime = TimeUtils.nanoTime();
+                player.menerimadamage(30);
+            }
         }
+
     }
 
     //=========================================================================FUNGSI-FUNGSI BUATAN KITA=========================================================================
@@ -294,7 +306,8 @@ public class InGame implements Screen
         //PENCET SPASI BUAT TAMBAH SCORE 100 BUAT SPAWN BOSS
         if(Gdx.input.isKeyPressed(Input.Keys.SPACE))
         {
-            enemyDestroyed += 100;
+            System.out.println("enemy destroyed: "+ enemyDestroyed);
+            enemyDestroyed = 100;
         }
     }
 
@@ -379,10 +392,14 @@ public class InGame implements Screen
             a = new SmallEnemy();
             a.x = 272;
             a.y = 750;
+            a.width = 64;
+            a.height = 64;
             enemies.add(a);
             a = new SmallEnemy();
             a.x = 464;
             a.y = 750;
+            a.width = 64;
+            a.height = 64;
             enemies.add(a);
         }
         else if(i == 1)
@@ -390,138 +407,182 @@ public class InGame implements Screen
             a = new SmallEnemy();
             a.x = 272;
             a.y = 750;
+            a.width = 64;
+            a.height = 64;
             enemies.add(a);
             a = new SmallEnemy();
             a.x = 432;
             a.y = 750;
+            a.width = 64;
+            a.height = 64;
             enemies.add(a);
 
-            scoreMultiplier = 0.5;
+            scoreMultiplier = 1;
         }
         else if(i == 2)
         {
             a = new SmallEnemy();
             a.x = 240;
             a.y = 750;
+            a.width = 64;
+            a.height = 64;
             enemies.add(a);
             a = new SmallEnemy();
             a.x = 464;
             a.y = 750;
+            a.width = 64;
+            a.height = 64;
             enemies.add(a);
 
-            scoreMultiplier = 1;
+            scoreMultiplier = 1.5;
         }
         else if(i == 3)
         {
             a = new SmallEnemy();
             a.x = 272;
             a.y = 750;
+            a.width = 64;
+            a.height = 64;
             enemies.add(a);
             a = new SmallEnemy();
             a.x = 464;
             a.y = 750;
+            a.width = 64;
+            a.height = 64;
             enemies.add(a);
             a = new SmallEnemy();
             a.x = 240;
             a.y = 750;
+            a.width = 64;
+            a.height = 64;
             enemies.add(a);
             a = new SmallEnemy();
             a.x = 432;
             a.y = 750;
+            a.width = 64;
+            a.height = 64;
             enemies.add(a);
 
-            scoreMultiplier = 1.5;
+            scoreMultiplier = 2;
         }
         else if(i == 4)
         {
             a = new SmallEnemy();
             a.x = 240;
             a.y = 750;
+            a.width = 64;
+            a.height = 64;
             enemies.add(a);
             a = new SmallEnemy();
             a.x = 432;
             a.y = 750;
+            a.width = 64;
+            a.height = 64;
             enemies.add(a);
 
-            scoreMultiplier = 2;
+            scoreMultiplier = 2.5;
         }
         else if(i == 5)
         {
             a = new SmallEnemy();
             a.x = 300;
             a.y = 750;
+            a.width = 64;
+            a.height = 64;
             enemies.add(a);
             a = new SmallEnemy();
             a.x = 600;
             a.y = 750;
+            a.width = 64;
+            a.height = 64;
             enemies.add(a);
 
-            scoreMultiplier = 2.5;
+            scoreMultiplier = 3;
         }
         else if(i == 6)
         {
             a = new SmallEnemy();
             a.x = 654;
             a.y = 750;
+            a.width = 64;
+            a.height = 64;
             enemies.add(a);
             a = new SmallEnemy();
             a.x = 734;
             a.y = 750;
+            a.width = 64;
+            a.height = 64;
             enemies.add(a);
 
-            scoreMultiplier = 3;
+            scoreMultiplier = 3.5;
         }
         else if(i == 7)
         {
             a = new SmallEnemy();
             a.x = 372;
             a.y = 750;
+            a.width = 64;
+            a.height = 64;
             enemies.add(a);
             a = new SmallEnemy();
             a.x = 100;
             a.y = 750;
+            a.width = 64;
+            a.height = 64;
             enemies.add(a);
 
-            scoreMultiplier = 3.5;
+            scoreMultiplier = 4;
         }
         else if(i == 8)
         {
             a = new SmallEnemy();
             a.x = 97;
             a.y = 750;
+            a.width = 64;
+            a.height = 64;
             enemies.add(a);
             a = new SmallEnemy();
             a.x = 754;
             a.y = 750;
+            a.width = 64;
+            a.height = 64;
             enemies.add(a);
 
-            scoreMultiplier = 4;
+            scoreMultiplier = 4.5;
         }
         else if(i == 9)
         {
             a = new SmallEnemy();
             a.x = 675;
             a.y = 750;
+            a.width = 64;
+            a.height = 64;
             enemies.add(a);
             a = new SmallEnemy();
             a.x = 213;
             a.y = 750;
+            a.width = 64;
+            a.height = 64;
             enemies.add(a);
 
-            scoreMultiplier = 4.5;
+            scoreMultiplier = 5;
         }
         else if(i == 10)
         {
             a = new SmallEnemy();
             a.x = 272;
             a.y = 750;
+            a.width = 64;
+            a.height = 64;
             enemies.add(a);
             a = new SmallEnemy();
             a.x = 464;
             a.y = 750;
+            a.width = 64;
+            a.height = 64;
             enemies.add(a);
 
-            scoreMultiplier = 5;
+            scoreMultiplier = 5.5;
         }
         else if(i == 11)
         {
@@ -539,10 +600,14 @@ public class InGame implements Screen
             a = new SmallEnemy();
             a.x = 272;
             a.y = 750;
+            a.width = 64;
+            a.height = 64;
             enemies.add(a);
             a = new SmallEnemy();
             a.x = 464;
             a.y = 750;
+            a.width = 64;
+            a.height = 64;
             enemies.add(a);
         }
         lastSpawnTime = TimeUtils.nanoTime();

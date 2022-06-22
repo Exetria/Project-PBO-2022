@@ -18,13 +18,13 @@ public abstract class Enemy extends Rectangle
         this.score = score;
     }
 
-    public void menerimadamage(int damage, Player player)
+    public void menerimadamage(int damage, Player player, double multiplier)
     {
         this.hp = this.hp - damage;
         if(this.hp <= 0)
             {
                 this.hp = 0;
-                player.addScore(this.score);
+                player.addScore((int) (this.score*multiplier));
             }
     }
 

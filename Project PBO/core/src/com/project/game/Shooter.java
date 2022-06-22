@@ -18,8 +18,8 @@ public class Shooter extends Game
         assets.getAssetManager().finishLoading();
 		batch = new SpriteBatch();
 		font = new BitmapFont();
-		this.setScreen(new MainMenuScreen(this, assets.getAssetManager()));
-//		this.setScreen(new MainMenu(this));
+//		this.setScreen(new MainMenuScreen(this, assets.getAssetManager()));
+		this.setScreen(new MainMenu(this));
 	}
 
 	@Override

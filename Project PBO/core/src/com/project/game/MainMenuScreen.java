@@ -18,7 +18,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class MainMenuScreen extends ScreenAdapter {
     final Shooter game;
 
-    SpriteBatch sb;
     OrthographicCamera camera;
     private Stage stage;
     private Music titleMusic;
@@ -33,7 +32,6 @@ public class MainMenuScreen extends ScreenAdapter {
     public MainMenuScreen(final Shooter game) {
         this.game = game;
 
-        sb = new SpriteBatch();
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false,800, 950);
@@ -71,8 +69,8 @@ public class MainMenuScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 clickSound.play();
-                game.setScreen(new InGame(game));
                 titleMusic.stop();
+                game.setScreen(new InGame(game));
                 dispose();
             }
         });
@@ -80,8 +78,8 @@ public class MainMenuScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 clickSound.play();
-                game.setScreen(new HighScoreScreen(game));
                 titleMusic.stop();
+                game.setScreen(new HighScoreScreen(game));
                 dispose();
             }
         });
@@ -100,15 +98,15 @@ public class MainMenuScreen extends ScreenAdapter {
         ScreenUtils.clear(0, 0, 0.2f, 1);
 
         camera.update();
-        sb.setProjectionMatrix(camera.combined);
+        game.batch.setProjectionMatrix(camera.combined);
 
         stage.act();
 
         stage.draw();
 
-        sb.begin();
-        menuFont.draw(sb, title, Gdx.graphics.getWidth()/2-(Gdx.graphics.getWidth()/4),800);
-        sb.end();
+        game.batch.begin();
+        menuFont.draw(game.batch, title, Gdx.graphics.getWidth()/2-(Gdx.graphics.getWidth()/4),800);
+        game.batch.end();
 
     }
 
@@ -119,6 +117,5 @@ public class MainMenuScreen extends ScreenAdapter {
         skin.dispose();
         menuFont.dispose();
         stage.dispose();
-        sb.dispose();
     }
 }

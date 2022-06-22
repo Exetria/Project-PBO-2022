@@ -18,8 +18,6 @@ public class GameOverScreen implements Screen {
     private boolean newHighScore;
     private char[] newName;
     private int currentChar;
-    SpriteBatch sb;
-
 
     private ShapeRenderer sr;
 
@@ -30,7 +28,6 @@ public class GameOverScreen implements Screen {
         this.game = game;
 
         sr = new ShapeRenderer();
-        sb = new SpriteBatch();
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 950);
@@ -39,6 +36,7 @@ public class GameOverScreen implements Screen {
         font = new BitmapFont();
         font.getData().setScale(2, 2);
 
+        Save.load();
         newHighScore = Save.gd.isHighScore(Save.gd.getYourScore());
 
         if (newHighScore){
@@ -52,18 +50,18 @@ public class GameOverScreen implements Screen {
         ScreenUtils.clear(0, 0, 0.2f, 1);
 
         camera.update();
-        sb.setProjectionMatrix(camera.combined);
+        game.batch.setProjectionMatrix(camera.combined);
 
-        sb.begin();
+        game.batch.begin();
 
         String s = "Game Over!";
         GlyphLayout layout = new GlyphLayout(menuFont, s);
         float w = layout.width;
 
-        menuFont.draw(sb, s, (Gdx.graphics.getWidth()-w) / 2,600);
+        menuFont.draw(game.batch, s, (Gdx.graphics.getWidth()-w) / 2,600);
 
         if(!newHighScore){
-            sb.end();
+            game.batch.end();
             return;
         }
 
@@ -71,18 +69,18 @@ public class GameOverScreen implements Screen {
         GlyphLayout layout1 = new GlyphLayout(font, s);
         w = layout1.width;
 
-        font.draw(sb, s, (Gdx.graphics.getWidth()-w) / 2,400);
+        font.draw(game.batch, s, (Gdx.graphics.getWidth()-w) / 2,400);
 
         for(int i = 0; i < newName.length; i++) {
             font.draw(
-                    sb,
+                    game.batch,
                     Character.toString(newName[i]),
                     340 + 50 * i,
                     250
             );
         }
 
-        sb.end();
+        game.batch.end();
 
         sr.begin(ShapeRenderer.ShapeType.Line);
         sr.line(340 + 50 * currentChar,
@@ -91,12 +89,6 @@ public class GameOverScreen implements Screen {
                 220
         );
         sr.end();
-
-
-        if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
-            game.setScreen(new MainMenuScreen(game));
-            dispose();
-        }
 
         if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
             if(newHighScore) {
@@ -107,6 +99,7 @@ public class GameOverScreen implements Screen {
                 Save.save();
             }
             game.setScreen(new MainMenuScreen(game));
+            dispose();
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP)){
@@ -174,7 +167,6 @@ public class GameOverScreen implements Screen {
     @Override
     public void dispose() {
         sr.dispose();
-        sb.dispose();
         menuFont.dispose();
         font.dispose();
     }

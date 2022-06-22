@@ -297,6 +297,7 @@ public class InGame implements Screen
             inGameMusic.stop();
             Save.gd.setYourScore(player.getScore());
             game.setScreen(new GameOverScreen(game));
+            dispose();
         }
 
 
@@ -1034,7 +1035,6 @@ public class InGame implements Screen
     @Override
     public void dispose()
     {
-        game.batch.dispose();
         playerImg.dispose();
         enemyImg.dispose();
         bossImg.dispose();

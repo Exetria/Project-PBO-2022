@@ -14,7 +14,6 @@ public class HighScoreScreen implements Screen {
     private BitmapFont font, font1, menuFont;
     private long highScores[];
     private String names[];
-    private SpriteBatch sb;
 
 
     OrthographicCamera camera;
@@ -22,8 +21,6 @@ public class HighScoreScreen implements Screen {
 
     public HighScoreScreen(Shooter game) {
         this.game = game;
-
-        sb = new SpriteBatch();
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 950);
@@ -44,15 +41,15 @@ public class HighScoreScreen implements Screen {
         ScreenUtils.clear(0, 0, 0.2f, 1);
 
         camera.update();
-        sb.setProjectionMatrix(camera.combined);
+        game.batch.setProjectionMatrix(camera.combined);
 
-        sb.begin();
+        game.batch.begin();
 
         String s = "High Scores";
         GlyphLayout layout = new GlyphLayout(menuFont, s);
         float w = layout.width;
 
-        menuFont.draw(sb, s, (Gdx.graphics.getWidth()-w) / 2, 800);
+        menuFont.draw(game.batch, s, (Gdx.graphics.getWidth()-w) / 2, 800);
 
         for (int i = 0; i < highScores.length; i++) {
             s = String.format(
@@ -65,16 +62,15 @@ public class HighScoreScreen implements Screen {
             GlyphLayout layout1 = new GlyphLayout(font, s);
             w = layout1.width;
 
-            font.draw(sb, s, (Gdx.graphics.getWidth()-w) / 2, 650 - (50*i));
+            font.draw(game.batch, s, (Gdx.graphics.getWidth()-w) / 2, 650 - (50*i));
         }
 
         GlyphLayout layout2 = new GlyphLayout(font1, "Press Enter or Esc to Main Menu!");
         w = layout2.width;
-        font1.draw(sb, "Press Enter or Esc to Main Menu!", (Gdx.graphics.getWidth()-w) / 2, 50);
+        font1.draw(game.batch, "Press Enter or Esc to Main Menu!", (Gdx.graphics.getWidth()-w) / 2, 50);
 
 
-
-        sb.end();
+        game.batch.end();
 
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE) || Gdx.input.isKeyPressed(Input.Keys.ENTER)){
             game.setScreen(new MainMenuScreen(game));
@@ -109,7 +105,6 @@ public class HighScoreScreen implements Screen {
 
     @Override
     public void dispose() {
-        sb.dispose();
         font.dispose();
         font1.dispose();
         menuFont.dispose();

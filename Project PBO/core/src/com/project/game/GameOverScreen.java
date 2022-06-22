@@ -85,7 +85,7 @@ public class GameOverScreen implements Screen {
         sb.end();
 
         sr.begin(ShapeRenderer.ShapeType.Line);
-        sr.line(	340 + 50 * currentChar,
+        sr.line(340 + 50 * currentChar,
                 220,
                 360 + 50 * currentChar,
                 220
@@ -93,7 +93,7 @@ public class GameOverScreen implements Screen {
         sr.end();
 
 
-        if (Gdx.input.isTouched()) {
+        if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
             game.setScreen(new MainMenuScreen(game));
             dispose();
         }

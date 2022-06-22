@@ -28,7 +28,6 @@ public class Shooter extends Game
 	@Override
 	public void dispose()
 	{
-		batch.dispose();
 		font.dispose();
 	}
 }

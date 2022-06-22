@@ -286,7 +286,6 @@ public class InGame implements Screen
             inGameMusic.stop();
             Save.gd.setYourScore(player.getScore());
             game.setScreen(new GameOverScreen(game));
-            dispose();
         }
 
 

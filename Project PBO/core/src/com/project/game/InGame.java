@@ -90,8 +90,9 @@ public class InGame implements Screen
         spawnAsteroids();
 
         enemies = new Array<Enemy>();
-        i = 1;
+        i = 0;
         getEnemyBatch(i);
+        i++;
 
         bossState = false;
 
@@ -172,7 +173,7 @@ public class InGame implements Screen
         }
         else
         {
-            if (TimeUtils.nanoTime() - lastSpawnTime > TimeUtils.millisToNanos(2000))   //waktu untuk ganti wave
+            if (TimeUtils.nanoTime() - lastSpawnTime > TimeUtils.millisToNanos(15000) || enemies.size == 0)   //waktu untuk ganti wave
             {
                 getEnemyBatch(i);
                 i++;
@@ -212,8 +213,6 @@ public class InGame implements Screen
                         iterLaser.remove();
                     }
                     enemies.get(0).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
-                    System.out.println("boss hp: " + enemies.get(0).getHP());
-                    System.out.println("player score: " + player.getScore());
                 }
             }
             else
@@ -286,7 +285,6 @@ public class InGame implements Screen
             inGameMusic.stop();
             Save.gd.setYourScore(player.getScore());
             game.setScreen(new GameOverScreen(game));
-            dispose();
         }
 
 

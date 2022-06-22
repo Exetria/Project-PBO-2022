@@ -14,7 +14,7 @@ import com.project.game.Shooter;
 public class GameOverScreen implements Screen {
     final Shooter game;
 
-    private BitmapFont menuFont, font;
+    private BitmapFont menuFont, font, font1;
     private boolean newHighScore;
     private char[] newName;
     private int currentChar;
@@ -35,6 +35,8 @@ public class GameOverScreen implements Screen {
         menuFont = new BitmapFont(Gdx.files.internal("Title.fnt"));
         font = new BitmapFont();
         font.getData().setScale(2, 2);
+        font1 = new BitmapFont();
+
 
         newHighScore = Save.gd.isHighScore(Save.gd.getYourScore());
 
@@ -58,6 +60,10 @@ public class GameOverScreen implements Screen {
         float w = layout.width;
 
         menuFont.draw(game.batch, s, (Gdx.graphics.getWidth()-w) / 2,600);
+
+        GlyphLayout layout2 = new GlyphLayout(font1, "Press Enter or Esc to Main Menu!");
+        w = layout2.width;
+        font1.draw(game.batch, "Press Enter or Esc to Main Menu!", (Gdx.graphics.getWidth()-w) / 2, 50);
 
         if(!newHighScore){
             game.batch.end();
@@ -100,11 +106,6 @@ public class GameOverScreen implements Screen {
                 220
         );
         sr.end();
-
-        if (Gdx.input.isTouched()) {
-            game.setScreen(new MainMenuScreen(game));
-            dispose();
-        }
 
         if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
             if(newHighScore) {
@@ -185,5 +186,6 @@ public class GameOverScreen implements Screen {
         sr.dispose();
         menuFont.dispose();
         font.dispose();
+        font1.dispose();
     }
 }

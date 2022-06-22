@@ -267,6 +267,22 @@ public class InGame implements Screen
             }
         }
 
+        Iterator<Enemy> iterEnemies = enemies.iterator();
+        while (iterEnemies.hasNext())
+        {
+            Enemy enemy = iterEnemies.next();
+            if (enemy.getHP() == 0){
+                enemies.removeValue(enemy,true);
+                if(bossState) {
+                    if (enemies.size <= 0) {
+                        bossState = false;
+                        enemyDestroyed++;
+                        getEnemyBatch(1);
+                    }
+                }
+            }
+
+        }
     }
 
     //=========================================================================FUNGSI-FUNGSI BUATAN KITA=========================================================================

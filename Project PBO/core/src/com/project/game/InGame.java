@@ -237,10 +237,10 @@ public class InGame implements Screen
                     iterLaser.remove();
                     enemies.get(2).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
                 }
-                if (laser.overlaps(enemies.get(3))){
-                    iterLaser.remove();
-                    enemies.get(3).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
-                }
+               // if (laser.overlaps(enemies.get(3))){
+               //     iterLaser.remove();
+               //     enemies.get(3).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                //}
             }
             else if (i==3 && enemies.size > 0){
                 if (laser.overlaps(enemies.get(0))){
@@ -259,10 +259,10 @@ public class InGame implements Screen
                     iterLaser.remove();
                     enemies.get(3).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
                 }
-                if (laser.overlaps(enemies.get(4))){
-                    iterLaser.remove();
-                    enemies.get(4).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
-                }
+             //   if (laser.overlaps(enemies.get(4))){
+             //       iterLaser.remove();
+             //       enemies.get(4).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+             //   }
             }
             else if (i==4 && enemies.size > 0){
                 if (laser.overlaps(enemies.get(0))){
@@ -307,10 +307,10 @@ public class InGame implements Screen
                     iterLaser.remove();
                     enemies.get(4).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
                 }
-                if (laser.overlaps(enemies.get(5))){
-                    iterLaser.remove();
-                    enemies.get(3).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
-                }
+           //     if (laser.overlaps(enemies.get(5))){
+           //         iterLaser.remove();
+           //         enemies.get(3).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+           //     }
             }
             else if (i==6 && enemies.size > 0) {
                 if (laser.overlaps(enemies.get(0))){

@@ -64,6 +64,8 @@ public class MainMenuScreen extends ScreenAdapter {
         stage.addActor(mainTable);
 
         titleMusic.play();
+        titleMusic.setVolume(0.7f);
+
 
         addButton("Play").addListener(new ClickListener(){
             @Override

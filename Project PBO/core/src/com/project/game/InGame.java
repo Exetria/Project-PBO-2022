@@ -28,7 +28,7 @@ public class InGame implements Screen
     private OrthographicCamera camera;
     final Music inGameMusic;
     private Music bossMusic;
-    final Sound explosionSound;
+    final Sound explosionSound,laserSound;
     private BitmapFont font;
 
     Player player;
@@ -62,6 +62,7 @@ public class InGame implements Screen
         font = new BitmapFont(Gdx.files.internal("Title.fnt")); // use arial
         inGameMusic = Gdx.audio.newMusic(Gdx.files.internal("inGame.mp3"));
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("explosion.mp3"));
+        laserSound = Gdx.audio.newSound(Gdx.files.internal("laserSound.mp3"));
 
 
 
@@ -190,7 +191,10 @@ public class InGame implements Screen
             spawnAsteroids();
 
         if (TimeUtils.nanoTime() - lastAttackTime > 1000_000_000)
+        {
             spawnLaserPulse();
+            laserSound.play();
+        }
 
         //=====================================================================COLLISION DETECTION===============================================================================
 

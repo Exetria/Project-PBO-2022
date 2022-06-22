@@ -57,7 +57,7 @@ public class InGame implements Screen
         asteroidImg = new Texture("asteroid.png");
         projectileImg = new Texture("projectile.png");
         backgroundImg = new Texture("background.png");
-        font = new BitmapFont(); // use arial
+        font = new BitmapFont(Gdx.files.internal("Title.fnt")); // use arial
         inGameMusic = Gdx.audio.newMusic(Gdx.files.internal("inGame.mp3"));
 
 
@@ -90,10 +90,10 @@ public class InGame implements Screen
         spawnAsteroids();
 
         enemies = new Array<Enemy>();
-        getEnemyBatch(0);
+        i = 1;
+        getEnemyBatch(i);
 
         bossState = false;
-        i = 1;                          //i = 2 karena batch ke-1 udah masuk jadi nanti mulai dari 2
 
         enemyDestroyed = 0;
     }
@@ -201,7 +201,7 @@ public class InGame implements Screen
             }
 
             // utk boss tp msh bekerja jg utk musuh biasa
-            if (bossState)
+            if (bossState) // batch 11
             {
                 if(laser.overlaps(enemies.get(0)) && enemies.get(0).getHP() > 0)
                 {
@@ -210,8 +210,266 @@ public class InGame implements Screen
                     System.out.println("boss hp: " + enemies.get(0).getHP());
                     System.out.println("player score: " + player.getScore());
                 }
+            } else if (i==1 && enemies.size > 0){
+                if (laser.overlaps(enemies.get(0))){
+                    iterLaser.remove();
+                    enemies.get(0).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(1))){
+                    iterLaser.remove();
+                    enemies.get(1).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(2))){
+                    iterLaser.remove();
+                    enemies.get(2).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
             }
-
+            else if (i==2 && enemies.size > 0){
+                if (laser.overlaps(enemies.get(0))){
+                    iterLaser.remove();
+                    enemies.get(0).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(1))){
+                    iterLaser.remove();
+                    enemies.get(1).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(2))){
+                    iterLaser.remove();
+                    enemies.get(2).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(3))){
+                    iterLaser.remove();
+                    enemies.get(3).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+            }
+            else if (i==3 && enemies.size > 0){
+                if (laser.overlaps(enemies.get(0))){
+                    iterLaser.remove();
+                    enemies.get(0).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(1))){
+                    iterLaser.remove();
+                    enemies.get(1).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(2))){
+                    iterLaser.remove();
+                    enemies.get(2).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(3))){
+                    iterLaser.remove();
+                    enemies.get(3).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(4))){
+                    iterLaser.remove();
+                    enemies.get(4).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+            }
+            else if (i==4 && enemies.size > 0){
+                if (laser.overlaps(enemies.get(0))){
+                    iterLaser.remove();
+                    enemies.get(0).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(1))){
+                    iterLaser.remove();
+                    enemies.get(1).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(2))){
+                    iterLaser.remove();
+                    enemies.get(2).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(3))){
+                    iterLaser.remove();
+                    enemies.get(3).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(4))){
+                    iterLaser.remove();
+                    enemies.get(4).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+            }
+            else if (i == 5 && enemies.size > 0){
+                if (laser.overlaps(enemies.get(0))){
+                    iterLaser.remove();
+                    enemies.get(0).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(1))){
+                    iterLaser.remove();
+                    enemies.get(1).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(2))){
+                    iterLaser.remove();
+                    enemies.get(2).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(3))){
+                    iterLaser.remove();
+                    enemies.get(3).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(4))){
+                    iterLaser.remove();
+                    enemies.get(4).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(5))){
+                    iterLaser.remove();
+                    enemies.get(3).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+            }
+            else if (i==6 && enemies.size > 0) {
+                if (laser.overlaps(enemies.get(0))){
+                    iterLaser.remove();
+                    enemies.get(0).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(1))){
+                    iterLaser.remove();
+                    enemies.get(1).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(2))){
+                    iterLaser.remove();
+                    enemies.get(2).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(3))){
+                    iterLaser.remove();
+                    enemies.get(3).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(4))){
+                    iterLaser.remove();
+                    enemies.get(4).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(5))){
+                    iterLaser.remove();
+                    enemies.get(3).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+            }
+            else if (i==7 && enemies.size > 0){
+                if (laser.overlaps(enemies.get(0))){
+                    iterLaser.remove();
+                    enemies.get(0).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(1))){
+                    iterLaser.remove();
+                    enemies.get(1).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(2))){
+                    iterLaser.remove();
+                    enemies.get(2).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(3))){
+                    iterLaser.remove();
+                    enemies.get(3).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(4))){
+                    iterLaser.remove();
+                    enemies.get(4).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(5))){
+                    iterLaser.remove();
+                    enemies.get(5).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+            }
+            else if (i == 8 && enemies.size > 0){
+                if (laser.overlaps(enemies.get(0))){
+                    iterLaser.remove();
+                    enemies.get(0).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(1))){
+                    iterLaser.remove();
+                    enemies.get(1).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(2))){
+                    iterLaser.remove();
+                    enemies.get(2).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(3))){
+                    iterLaser.remove();
+                    enemies.get(3).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(4))){
+                    iterLaser.remove();
+                    enemies.get(4).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(5))){
+                    iterLaser.remove();
+                    enemies.get(5).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(6))){
+                    iterLaser.remove();
+                    enemies.get(6).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+            }
+            else if (i == 9 && enemies.size > 0){
+                if (laser.overlaps(enemies.get(0))){
+                    iterLaser.remove();
+                    enemies.get(0).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(1))){
+                    iterLaser.remove();
+                    enemies.get(1).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(2))){
+                    iterLaser.remove();
+                    enemies.get(2).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(3))){
+                    iterLaser.remove();
+                    enemies.get(3).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(4))){
+                    iterLaser.remove();
+                    enemies.get(4).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(5))){
+                    iterLaser.remove();
+                    enemies.get(5).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(6))){
+                    iterLaser.remove();
+                    enemies.get(6).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(7))){
+                    iterLaser.remove();
+                    enemies.get(7).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(8))){
+                    iterLaser.remove();
+                    enemies.get(8).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+            }
+            else if (i == 10 && enemies.size > 0){
+                if (laser.overlaps(enemies.get(0))){
+                    iterLaser.remove();
+                    enemies.get(0).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(1))){
+                    iterLaser.remove();
+                    enemies.get(1).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(2))){
+                    iterLaser.remove();
+                    enemies.get(2).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(3))){
+                    iterLaser.remove();
+                    enemies.get(3).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(4))){
+                    iterLaser.remove();
+                    enemies.get(4).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(5))){
+                    iterLaser.remove();
+                    enemies.get(5).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(6))){
+                    iterLaser.remove();
+                    enemies.get(6).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(7))){
+                    iterLaser.remove();
+                    enemies.get(7).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+                if (laser.overlaps(enemies.get(8))){
+                    iterLaser.remove();
+                    enemies.get(8).menerimadamage(player.getLaserDmg(), player, scoreMultiplier);
+                }
+            }
         }
 
         //peluru boss jalan ke bawah
@@ -254,26 +512,6 @@ public class InGame implements Screen
                 lastPlayerCrashTime = TimeUtils.nanoTime();
                 player.menerimadamage(30);
             }
-        }
-
-        Iterator<Enemy> iterEnemies = enemies.iterator();
-        while (iterEnemies.hasNext())
-        {
-            Enemy enemy = iterEnemies.next();
-            if (enemy.getHP() == 0)
-            {
-                iterEnemies.remove();
-                if(bossState)
-                {
-                    if (enemies.size <= 0)
-                    {
-                        bossState = false;
-                        enemyDestroyed++;
-                        getEnemyBatch(1);
-                    }
-                }
-            }
-
         }
     }
 
@@ -393,10 +631,8 @@ public class InGame implements Screen
     //musuh"nya masih diisi manual untuk sekarang
     private void getEnemyBatch(int i)
     {
-        //48 112 176 240 304 X368X 432 496 560 624 688          koordinat X
-        //622 686 750 814 878                                   koordinat Y
         enemies.clear();
-        if(i == 0)      //selesai
+        if(i == 0)          //selesai
         {
             /*
             FORMASI
@@ -422,15 +658,17 @@ public class InGame implements Screen
 
             scoreMultiplier = 1;
         }
-        else if(i == 1)
+        else if(i == 1)     //selesai
         {
             /*
+            FORMASI
             00100000100
             00000000000
             00000000000
             00000100000
             00000000000
             */
+            // 3 enemies
             a = new SmallEnemy();
             a.x = 176;
             a.y = 878;
@@ -454,31 +692,144 @@ public class InGame implements Screen
 
             scoreMultiplier = 1;
         }
-        else if(i == 2)
+        else if(i == 2)     //selesai
         {
+            /*
+            FORMASI
+            00000000000
+            00000100000
+            01000000010
+            00000100000
+            00000000000
+            */
+            // 4 enemies
+            a = new SmallEnemy();
+            a.x = 368;
+            a.y = 814;
+            a.width = 64;
+            a.height = 64;
+            enemies.add(a);
 
+            a = new SmallEnemy();
+            a.x = 112;
+            a.y = 750;
+            a.width = 64;
+            a.height = 64;
+            enemies.add(a);
+
+            a = new SmallEnemy();
+            a.x = 624;
+            a.y = 750;
+            a.width = 64;
+            a.height = 64;
+            enemies.add(a);
+
+            a = new SmallEnemy();
+            a.x = 368;
+            a.y = 686;
+            a.width = 64;
+            a.height = 64;
+            enemies.add(a);
 
             scoreMultiplier = 1.5;
         }
-        else if(i == 3)
+        else if(i == 3)     //selesai
         {
+            /*
+            FORMASI
+            00000000000
+            01000100010
+            00010001000
+            00000000000
+            00000000000
+            */
+            // 5 enemies
+            a = new SmallEnemy();
+            a.x = 112;
+            a.y = 814;
+            a.width = 64;
+            a.height = 64;
+            enemies.add(a);
 
+            a = new SmallEnemy();
+            a.x = 368;
+            a.y = 814;
+            a.width = 64;
+            a.height = 64;
+            enemies.add(a);
+
+            a = new SmallEnemy();
+            a.x = 624;
+            a.y = 814;
+            a.width = 64;
+            a.height = 64;
+            enemies.add(a);
+
+            a = new SmallEnemy();
+            a.x = 240;
+            a.y = 750;
+            a.width = 64;
+            a.height = 64;
+            enemies.add(a);
+
+            a = new SmallEnemy();
+            a.x = 496;
+            a.y = 750;
+            a.width = 64;
+            a.height = 64;
+            enemies.add(a);
 
             scoreMultiplier = 2;
         }
-        else if(i == 4)
+        else if(i == 4)     //selesai
         {
+            /*
+            FORMASI
+            00000100000
+            00000000000
+            00010001000
+            00000000000
+            01000000010
+            */
+            // 5 enemies
+            a = new SmallEnemy();
+            a.x = 240;
+            a.y = 750;
+            a.width = 64;
+            a.height = 64;
+            enemies.add(a);
 
+            a = new SmallEnemy();
+            a.x = 496;
+            a.y = 750;
+            a.width = 64;
+            a.height = 64;
+            enemies.add(a);
+
+            a = new SmallEnemy();
+            a.x = 112;
+            a.y = 622;
+            a.width = 64;
+            a.height = 64;
+            enemies.add(a);
+
+            a = new SmallEnemy();
+            a.x = 624;
+            a.y = 622;
+            a.width = 64;
+            a.height = 64;
+            enemies.add(a);
+
+            a = new SmallEnemy();
+            a.x = 368;
+            a.y = 878;
+            a.width = 64;
+            a.height = 64;
+            enemies.add(a);
 
             scoreMultiplier = 2.5;
         }
         else if(i == 5)
-        {
-
-
-            scoreMultiplier = 3;
-        }
-        else if(i == 6)     //selesai
         {
             /*
             FORMASI
@@ -488,8 +839,30 @@ public class InGame implements Screen
             000010000
             000000000
             */
+            // 6 enemies
+
+            scoreMultiplier = 3;
+        }
+        else if(i == 6)     //selesai
+        {
+            /*
+            FORMASI
+            00000000000
+            01000000010
+            00001010000
+            00100000100
+            00000000000
+            */
+            // 6 enemies
             a = new SmallEnemy();
-            a.x = 368;
+            a.x = 112;
+            a.y = 814;
+            a.width = 64;
+            a.height = 64;
+            enemies.add(a);
+
+            a = new SmallEnemy();
+            a.x = 624;
             a.y = 814;
             a.width = 64;
             a.height = 64;
@@ -510,21 +883,14 @@ public class InGame implements Screen
             enemies.add(a);
 
             a = new SmallEnemy();
-            a.x = 240;
-            a.y = 814;
+            a.x = 176;
+            a.y = 686;
             a.width = 64;
             a.height = 64;
             enemies.add(a);
 
             a = new SmallEnemy();
-            a.x = 490;
-            a.y = 814;
-            a.width = 64;
-            a.height = 64;
-            enemies.add(a);
-
-            a = new SmallEnemy();
-            a.x = 368;
+            a.x = 560;
             a.y = 686;
             a.width = 64;
             a.height = 64;
@@ -534,19 +900,27 @@ public class InGame implements Screen
         }
         else if(i == 7)
         {
-
+            // 6 enemies
+/*
+            FORMASI
+            00000000001
+            00000000100
+            00001010000
+            00100000000
+            10000000000
+            */
 
             scoreMultiplier = 4;
         }
         else if(i == 8)
         {
-
+            // 6 enemies
 
             scoreMultiplier = 4.5;
         }
         else if(i == 9)
         {
-
+            // 9 enemies
 
             scoreMultiplier = 5;
         }
@@ -560,6 +934,7 @@ public class InGame implements Screen
             00010001000
             01000000010
             */
+            // 9 enemies
             a = new SmallEnemy();
             a.x = 112;
             a.y = 878;
@@ -643,6 +1018,7 @@ public class InGame implements Screen
         }
         lastSpawnTime = TimeUtils.nanoTime();
     }
+
 
     //============================================================FUNGSI BAWAAN YG TDK DIPAKE====================================================================================
 

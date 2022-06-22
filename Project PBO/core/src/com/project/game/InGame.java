@@ -45,7 +45,7 @@ public class InGame implements Screen
     double scoreMultiplier;
     boolean bossState;                                          //maksudnya state sekarang lagi boss fight atau tidak
 
-    public InGame(Shooter game, AssetManager assetManager)
+    public InGame(Shooter game)
     {
         this.game = game;
 

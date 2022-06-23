@@ -60,9 +60,9 @@ public class GameOverScreen implements Screen {
 
         menuFont.draw(game.batch, s, (Gdx.graphics.getWidth()-w) / 2,600);
 
-        GlyphLayout layout2 = new GlyphLayout(font1, "Press Enter or Esc to Main Menu!");
+        GlyphLayout layout2 = new GlyphLayout(font1, "Press Enter to Main Menu!");
         w = layout2.width;
-        font1.draw(game.batch, "Press Enter or Esc to Main Menu!", (Gdx.graphics.getWidth()-w) / 2, 50);
+        font1.draw(game.batch, "Press Enter to Main Menu!", (Gdx.graphics.getWidth()-w) / 2, 50);
 
         if(!newHighScore){
             game.batch.end();

@@ -93,7 +93,7 @@ public class InGame implements Screen
     @Override
     public void show()
     {
-        inGameMusic.setVolume(1f);
+        inGameMusic.setVolume(0.5f);
         inGameMusic.play();
         inGameMusic.setLooping(true);
     }
@@ -166,6 +166,7 @@ public class InGame implements Screen
         {
             bossMove();
             inGameMusic.stop();
+            bossTheme.setVolume(0.5f);
             bossTheme.play();
             bossTheme.setLooping(true);
 
@@ -202,7 +203,7 @@ public class InGame implements Screen
         if (TimeUtils.nanoTime() - lastAttackTime > 900_000_000)
         {
             spawnLaserPulse();
-            laserSound.play();
+            laserSound.play(0.3f);
         }
 
         //=====================================================================COLLISION DETECTION===============================================================================

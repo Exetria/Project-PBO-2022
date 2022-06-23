@@ -327,6 +327,7 @@ public class InGame implements Screen
         if(player.getHp() <= 0)
         {
             inGameMusic.stop();
+            bossTheme.stop();
             Save.gd.setYourScore(player.getScore());
             game.setScreen(new GameOverScreen(game));
             dispose();
@@ -1077,6 +1078,7 @@ public class InGame implements Screen
         playerImg.dispose();
         smallEnemyImg.dispose();
         mediumEnemyImg.dispose();
+        bossTheme.dispose();
         bossImg.dispose();
         laserImg.dispose();
         asteroidImg.dispose();

@@ -15,7 +15,6 @@ public class Shooter extends Game
 	{
 		batch = new SpriteBatch();
 		font = new BitmapFont();
-//		this.setScreen(new MainMenuScreen(this, assets.getAssetManager()));
 		this.setScreen(new MainMenuScreen(this));
 	}
 

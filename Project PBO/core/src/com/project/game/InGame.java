@@ -22,7 +22,7 @@ public class InGame implements Screen
 
     private final Texture playerImg,asteroidImg,laserImg,smallEnemyImg, mediumEnemyImg, enemyLaserImg,bossImg,projectileImg, backgroundImg;
     private final OrthographicCamera camera;
-    final Music inGameMusic;
+    final Music inGameMusic, bossTheme;
     final Sound explosionSound,laserSound,projectileSound;
     private final BitmapFont font;
 
@@ -59,17 +59,7 @@ public class InGame implements Screen
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("explosion.mp3"));
         laserSound = Gdx.audio.newSound(Gdx.files.internal("laserSound.mp3"));
         projectileSound = Gdx.audio.newSound(Gdx.files.internal("projectileSound.mp3"));
-
-
-        // assets menggunakan class Assets
-//        playerImg = assetManager.get(Assets.playerImg);
-//        enemyImg = assetManager.get(Assets.enemyImg);
-//        bossImg = assetManager.get(Assets.bossImg);
-//        laserImg = assetManager.get(Assets.laserImg);
-//        asteroidImg = assetManager.get(Assets.asteroidImg);
-//        projectileImg = assetManager.get(Assets.projectileImg);
-//        backgroundImg = assetManager.get(Assets.backgroundImg);
-//        font = assetManager.get(Assets.menuFont); // use the title font
+        bossTheme = Gdx.audio.newMusic(Gdx.files.internal("bossTheme.mp3"));
         font.getData().setScale(0.2f);//set size for the font
 
         camera = new OrthographicCamera();
@@ -176,8 +166,10 @@ public class InGame implements Screen
         if(bossState)
         {
             bossMove();
+            inGameMusic.stop();
+            bossTheme.play();
             //spawn peluru boss / detik ketika HP > 0
-            if (TimeUtils.nanoTime() - lastProjectileTime > 1000_000_000 && enemies.get(0).getHP() > 0)
+            if (TimeUtils.nanoTime() - lastProjectileTime > 750_000_000 && enemies.get(0).getHP() > 0)
             {
                 spawnProjectile();
                 projectileSound.play();
@@ -188,10 +180,13 @@ public class InGame implements Screen
                 enemyDestroyed++;
                 i = 0;
                 explosionSound.play();
+                bossTheme.stop();
+                inGameMusic.play();
             }
         }
         else
         {
+
             if (TimeUtils.nanoTime() - lastSpawnTime > TimeUtils.millisToNanos(15000) || enemies.size == 0)   //waktu untuk ganti wave
             {
                 getEnemyBatch(i);
@@ -203,7 +198,7 @@ public class InGame implements Screen
         if (TimeUtils.nanoTime() - lastAsteroidTime > 1000_000_000)
             spawnAsteroids();
 
-        if (TimeUtils.nanoTime() - lastAttackTime > 1000_000_000)
+        if (TimeUtils.nanoTime() - lastAttackTime > 900_000_000)
         {
             spawnLaserPulse();
             laserSound.play();
@@ -242,6 +237,13 @@ public class InGame implements Screen
                 count = 0;
                 for(Enemy enemy : enemies)
                 {
+                    if (player.overlaps(enemy))
+                    {
+                        explosionSound.play();
+                        player.menerimadamage(enemy.getDamage());
+                        enemies.removeIndex(count);
+                    }
+
                     if(laser.overlaps(enemy))
                     {
                         if(lasers.size > 0)
@@ -254,13 +256,6 @@ public class InGame implements Screen
                             explosionSound.play();
                             enemies.removeIndex(count);
                         }
-                    }
-
-                    if (player.overlaps(enemy))
-                    {
-                        explosionSound.play();
-                        player.menerimadamage(enemy.getDamage());
-                        enemies.removeIndex(count);
                     }
                     count++;
                 }
@@ -289,7 +284,7 @@ public class InGame implements Screen
         while(iterBossProjectile.hasNext())
         {
             Rectangle projectile = iterBossProjectile.next();
-            projectile.y -= 300 * Gdx.graphics.getDeltaTime();
+            projectile.y -= 350 * Gdx.graphics.getDeltaTime();
             if(projectile.y < 0)
             {
                 iterBossProjectile.remove();

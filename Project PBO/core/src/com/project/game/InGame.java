@@ -70,17 +70,17 @@ public class InGame implements Screen
         player.width = 64;
         player.height = 64;
 
-        lasers = new Array<Rectangle>();
+        lasers = new Array<>();
         spawnLaserPulse();
 
-        enemyLasers = new Array<Rectangle>();
+        enemyLasers = new Array<>();
 
-        projectiles = new Array<Rectangle>();
+        projectiles = new Array<>();
 
-        asteroids = new Array<Enemy>();
+        asteroids = new Array<>();
         spawnAsteroids();
 
-        enemies = new Array<Enemy>();
+        enemies = new Array<>();
         i = 0;
         getEnemyBatch(i);
         i++;

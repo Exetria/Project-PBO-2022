@@ -15,7 +15,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import java.util.Iterator;
 
-//CLASS INI ISINYA PROSES-PROSES PAS GAMENYA LAGI JALAN/IN GAME (THE LOGIC)
 public class InGame implements Screen
 {
     final Shooter game;
@@ -28,7 +27,7 @@ public class InGame implements Screen
 
     Player player;
     Rectangle laser;
-    Enemy a;                                                    //a ini enemy sementara buat ngisi array musuh
+    Enemy a;
     Array<Rectangle> lasers;
     Array<Rectangle> enemyLasers;
     Array<Rectangle> projectiles;
@@ -38,13 +37,12 @@ public class InGame implements Screen
     long lastAttackTime, lastProjectileTime, lastAsteroidTime, lastSpawnTime, lastPlayerCrashTime, lastEnemyAttackTime;
     int enemyDestroyed, touchSide, i, count, random;
     double scoreMultiplier;
-    boolean bossState;                                          //maksudnya state sekarang lagi boss fight atau tidak
+    boolean bossState;
 
     public InGame(Shooter game)
     {
         this.game = game;
 
-        // assets manual
         playerImg = new Texture("player.png");
         smallEnemyImg = new Texture("smallEnemy.png");
         mediumEnemyImg = new Texture("mediumEnemy.png");
@@ -92,7 +90,6 @@ public class InGame implements Screen
         enemyDestroyed = 0;
     }
 
-    //fungsi show bakal insert lagu pas awal mulai
     @Override
     public void show()
     {
@@ -130,7 +127,7 @@ public class InGame implements Screen
             game.batch.draw(asteroidImg, asteroid.x, asteroid.y);
         }
 
-        //cek apakah objeknya boss/small enemy, gambar sesuai classnya
+        //objek digambar sesuai kelasnya
         for(Enemy enemy : enemies)
         {
             if(enemy instanceof SmallEnemy)
@@ -145,13 +142,13 @@ public class InGame implements Screen
                 font.draw(game.batch, "Enemy HP: " + enemies.get(0).getHP(), 400 - 32, 600 - 16);
             }
 
-            //random tembak laser
+            //random tembak laser khusus untuk mediumEnemy
             if(enemy instanceof MediumEnemy && TimeUtils.nanoTime() - lastEnemyAttackTime > 1500_000_000)
             {
                 random = MathUtils.random(1, 10);
                 if(random == 2 || random == 5 || random == 9)
                 {
-                    spawnEnemyLaserPulse(enemy.x, enemy.y);
+                    spawnLaserPulse(enemy.x, enemy.y);
                 }
             }
         }
@@ -170,7 +167,8 @@ public class InGame implements Screen
             inGameMusic.stop();
             bossTheme.play();
             bossTheme.setLooping(true);
-            //spawn peluru boss / detik ketika HP > 0
+
+            //spawn peluru boss
             if (TimeUtils.nanoTime() - lastProjectileTime > 750_000_000 && enemies.get(0).getHP() > 0)
             {
                 spawnProjectile();
@@ -416,7 +414,8 @@ public class InGame implements Screen
         lastAttackTime = TimeUtils.nanoTime();
     }
 
-    private void spawnEnemyLaserPulse(float x, float y)
+    //overload spawn laser pulse buat enemy
+    private void spawnLaserPulse(float x, float y)
     {
         laser = new Rectangle();
         laser.x = x + 28;

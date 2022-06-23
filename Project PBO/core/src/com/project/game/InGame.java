@@ -169,6 +169,7 @@ public class InGame implements Screen
             bossMove();
             inGameMusic.stop();
             bossTheme.play();
+            bossTheme.setLooping(true);
             //spawn peluru boss / detik ketika HP > 0
             if (TimeUtils.nanoTime() - lastProjectileTime > 750_000_000 && enemies.get(0).getHP() > 0)
             {
@@ -187,7 +188,6 @@ public class InGame implements Screen
         }
         else
         {
-
             if (TimeUtils.nanoTime() - lastSpawnTime > TimeUtils.millisToNanos(15000) || enemies.size == 0)   //waktu untuk ganti wave
             {
                 getEnemyBatch(i);
@@ -238,7 +238,7 @@ public class InGame implements Screen
                 count = 0;
                 for(Enemy enemy : enemies)
                 {
-                    if (player.overlaps(enemy))
+                    if (player.overlaps(enemy))                                                 //player nabrak musuh
                     {
                         explosionSound.play();
                         player.menerimadamage(enemy.getDamage());
@@ -377,12 +377,6 @@ public class InGame implements Screen
         {
             getEnemyBatch(11);
         }
-    }
-
-    //fungsi spawn bossnya (batch musuh nomor 11 itu isinya boss tok)
-    private void spawnBoss()
-    {
-        getEnemyBatch(11);
     }
 
     //gerakan kanan kiri boss

@@ -161,6 +161,7 @@ public class InGame implements Screen
 
         move();
 
+        //selama bossfight, pake ini
         if(bossState)
         {
             bossMove();
@@ -184,6 +185,7 @@ public class InGame implements Screen
                 inGameMusic.play();
             }
         }
+        //selama bukan bossfight, pake ini
         else
         {
             if (TimeUtils.nanoTime() - lastSpawnTime > TimeUtils.millisToNanos(15000) || enemies.size == 0)   //waktu untuk ganti wave
@@ -205,7 +207,7 @@ public class InGame implements Screen
 
         //=====================================================================COLLISION DETECTION===============================================================================
 
-        //peluru player jalan keatas
+        //peluru player jalan keatas dan collison detection
         Iterator<Rectangle> iterLaser = lasers.iterator();
         while(iterLaser.hasNext())
         {
@@ -261,7 +263,7 @@ public class InGame implements Screen
             }
         }
 
-        //bagian untuk laser musuh
+        //bagian untuk laser musuh jalan kebawah dan collision detection
         Iterator<Rectangle> iterEnemyLaser = enemyLasers.iterator();
         while(iterEnemyLaser.hasNext())
         {
@@ -278,7 +280,7 @@ public class InGame implements Screen
             }
         }
 
-        //peluru boss jalan ke bawah
+        //peluru boss jalan ke bawah dan collision detection
         Iterator<Rectangle> iterBossProjectile = projectiles.iterator();
         while(iterBossProjectile.hasNext())
         {
@@ -295,7 +297,7 @@ public class InGame implements Screen
             }
         }
 
-        //asteroid jatuh ke bawah
+        //asteroid jatuh ke bawah dan collision detection
         Iterator<Enemy> iterAsteroid = asteroids.iterator();
         while (iterAsteroid.hasNext())
         {
@@ -313,7 +315,7 @@ public class InGame implements Screen
             }
         }
 
-        // player collision with boss check
+        //collision detection player dan boss
         if (bossState)
         {
             if (player.overlaps(enemies.get(0)) && TimeUtils.nanoTime() - lastPlayerCrashTime > 3000_000_000L)
@@ -451,7 +453,6 @@ public class InGame implements Screen
     }
 
     //fungsi buat ganti batch/wave musuh
-    //musuh"nya masih diisi manual untuk sekarang
     private void getEnemyBatch(int i)
     {
         enemies.clear();
@@ -1041,7 +1042,7 @@ public class InGame implements Screen
     }
 
 
-    //============================================================FUNGSI BAWAAN YG TDK DIPAKE====================================================================================
+    //===================================================================FUNGSI BAWAAN==========================================================================================
 
     @Override
     public void resize(int width, int height)

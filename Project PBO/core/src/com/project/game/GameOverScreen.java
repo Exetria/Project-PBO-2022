@@ -118,7 +118,7 @@ public class GameOverScreen implements Screen {
             dispose();
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)){
             if (newName[currentChar] == ' '){
                 newName[currentChar] = 'Z';
             }
@@ -130,7 +130,7 @@ public class GameOverScreen implements Screen {
             }
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)){
             if(newName[currentChar] == ' ') {
                 newName[currentChar] = 'A';
             }
@@ -142,13 +142,13 @@ public class GameOverScreen implements Screen {
             }
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)){
             if(currentChar < newName.length - 1) {
                 currentChar++;
             }
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)){
             if(currentChar > 0) {
                 currentChar--;
             }

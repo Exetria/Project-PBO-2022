@@ -23,7 +23,7 @@ public class InGame implements Screen
     private final Texture playerImg,asteroidImg,laserImg,smallEnemyImg, mediumEnemyImg, enemyLaserImg,bossImg,projectileImg, backgroundImg;
     private final OrthographicCamera camera;
     final Music inGameMusic, bossTheme;
-    final Sound explosionSound,laserSound,projectileSound;
+    final Sound explosionSound,laserSound,projectileSound,asteroidHit;
     private final BitmapFont font;
 
     Player player;
@@ -60,6 +60,7 @@ public class InGame implements Screen
         laserSound = Gdx.audio.newSound(Gdx.files.internal("laserSound.mp3"));
         projectileSound = Gdx.audio.newSound(Gdx.files.internal("projectileSound.mp3"));
         bossTheme = Gdx.audio.newMusic(Gdx.files.internal("bossTheme.mp3"));
+        asteroidHit = Gdx.audio.newSound(Gdx.files.internal("asteroidHit.mp3"));
         font.getData().setScale(0.2f);//set size for the font
 
         camera = new OrthographicCamera();
@@ -310,6 +311,7 @@ public class InGame implements Screen
             {
                 iterAsteroid.remove();
                 player.menerimadamage(asteroid.getDamage());
+                asteroidHit.play();
             }
         }
 

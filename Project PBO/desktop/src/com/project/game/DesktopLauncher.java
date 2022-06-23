@@ -11,7 +11,7 @@ public class DesktopLauncher {
 		config.setForegroundFPS(60);
 		config.setWindowedMode(800,950);
 		config.useVsync(true);
-		config.setTitle("Alien Sky");
+		config.setTitle("Alien Shooter");
 		config.setWindowIcon(Files.FileType.Internal, "player.png");
 		new Lwjgl3Application(new Shooter(), config);
 	}

@@ -37,7 +37,6 @@ public class GameOverScreen implements Screen {
         font.getData().setScale(2, 2);
         font1 = new BitmapFont();
 
-
         newHighScore = Save.gd.isHighScore(Save.gd.getYourScore());
 
         if (newHighScore){

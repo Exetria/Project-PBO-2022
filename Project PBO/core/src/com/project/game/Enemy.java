@@ -2,8 +2,6 @@ package com.project.game;
 
 import com.badlogic.gdx.math.Rectangle;
 
-// interface
-
 public abstract class Enemy extends Rectangle
 {
     private int hp;
